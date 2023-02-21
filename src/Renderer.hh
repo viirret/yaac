@@ -11,7 +11,8 @@ namespace Renderer
 	void set(SDL_Renderer* ren);
 
 	void render();
-	void renderBackground(Color color);
+	void clear();
+	void setColor(Color color);
 }
 
 #endif

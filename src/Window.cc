@@ -1,7 +1,7 @@
 #include "Window.hh"
+
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_error.h>
-#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_ttf.h>
 
 Window::Window(const std::string& title)
 {
@@ -44,6 +44,9 @@ Window::Window(const std::string& title)
 	// update window size
 	SDL_GetWindowSize(window, &size.x, &size.y); 
 	std::cout << "Window created!" << std::endl;
+
+	// start other SDL stuff
+	TTF_Init();
 }
 
 Window::~Window()

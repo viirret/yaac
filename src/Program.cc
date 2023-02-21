@@ -1,11 +1,12 @@
 #include "Program.hh"
-#include "Renderer.hh"
+#include <ctime>
 
-Program::Program(int argc, char** argv)
-	: argc(argc), argv(argv), bgColor(255, 200, 244, 255), window("")
+Program::Program(int argc, char** argv) 
+	: argc(argc), argv(argv), window(""), 
+	mainFont(TTF_OpenFont("../assets/font.ttf", 24)),
+	clock(mainFont),
+	bgColor(255, 200, 244, 255)
 {
-	TTF_Init();
-
 	while(!close)
 	{
 		update();
@@ -30,7 +31,11 @@ void Program::eventHandler()
 
 void Program::render()
 {
-	Renderer::renderBackground(bgColor);
+	// render background
+	Renderer::setColor(bgColor);
+	Renderer::clear();
+
+	clock.render();
 
 	// main SDL rendering
 	Renderer::render();	

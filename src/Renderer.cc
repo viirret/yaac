@@ -10,11 +10,15 @@ namespace Renderer
 
 	void render() 
 	{
-		SDL_RenderClear(renderer);
 		SDL_RenderPresent(renderer); 
 	}
 
-	void renderBackground(Color color)
+	void clear()
+	{
+		SDL_RenderClear(renderer);
+	}
+
+	void setColor(Color color)
 	{
 		SDL_SetRenderDrawColor(renderer, color.R, color.G, color.B, color.A);
 	}

@@ -3,6 +3,7 @@
 
 #include "Window.hh"
 #include "Color.hh"
+#include "Clock.hh"
 
 #include <SDL2/SDL_ttf.h>
 
@@ -14,22 +15,19 @@ private:
 	// cmd arguments
 	int argc;
 	char** argv;
-	Color bgColor;
 
 	Window window;
+	TTF_Font* mainFont;
+
+	Clock clock;
+
+	Color bgColor;
 
 	bool close = false;
 
 	void update();
 	void eventHandler();
 	void render();
-
-	// let's start by creating inputfield
-	// this is too simple simple program to create abstraction for what we're creating
-	TTF_Font* font;
-	SDL_Surface* surface;
-	SDL_Texture* texture;
-	SDL_Rect inputField;
 };
 
 #endif
