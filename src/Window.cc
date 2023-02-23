@@ -2,10 +2,11 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 
 Window::Window(const std::string& title)
 {
-	if(SDL_Init(SDL_INIT_VIDEO) < 0)
+	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 	{
 		std::cout << "Couldn't initialize SDL: " << SDL_GetError() << std::endl;
 		return;
@@ -46,14 +47,21 @@ Window::Window(const std::string& title)
 	SDL_GetWindowSize(window, &size.x, &size.y); 
 	std::cout << "Window created!" << std::endl;
 
-	// start other SDL stuff
+	// initialize other SDL stuff
 	TTF_Init();
+
+	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{
+		std::cout << "Unable to open audio " << Mix_GetError() << std::endl;
+		return;
+	}
 }
 
 Window::~Window()
 {
 	if(renderer) SDL_DestroyRenderer(renderer);
 	if(window) SDL_DestroyWindow(window);
+	Mix_CloseAudio();
 	TTF_Quit();
 	SDL_Quit();
 }

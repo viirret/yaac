@@ -9,5 +9,5 @@ file(GLOB SRC_FILES "${SRC_DIR}/*.cc")
 
 add_executable(x ${SRC_FILES})
 
-target_link_libraries(x -lSDL2 -lSDL2_ttf)
+target_link_libraries(x -lSDL2 -lSDL2_ttf -lSDL2_mixer)
 

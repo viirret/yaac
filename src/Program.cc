@@ -1,6 +1,8 @@
 #include "Program.hh"
 #include "Renderer.hh"
 
+#include <SDL2/SDL_mixer.h>
+
 #define ssize window.getSize()
 
 Program::Program(int argc, char** argv) 
@@ -20,7 +22,31 @@ Program::Program(int argc, char** argv)
 	// what happens when clicked
 	[&]()
 	{
-		buttons.back()->isPressed = true;
+		buttons[0]->isPressed = true;
+	}));
+
+
+	// create button that can test sounds
+	buttons.emplace_back(std::make_unique<Button>(
+	SDL_Rect{ ssize.x - ssize.x / 6, ssize.y / 8, 200, 50},
+	mainFont, "Test sounds",
+	[&]()
+	{
+		buttons[1]->isPressed = true;
+
+		// play clicksound
+		Mix_Music* click = Mix_LoadMUS("../assets/click.mp3");
+
+		if(!click)
+		{
+			std::cout << "Cannot find clicksound " << Mix_GetError() << std::endl;
+		}
+
+		if(Mix_PlayMusic(click, 0) == -1)
+		{
+			std::cout << "Cannot play clicksound " << Mix_GetError() << std::endl;
+		}
+
 	}));
 
 	while(!close)
