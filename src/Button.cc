@@ -1,10 +1,10 @@
 #include "Button.hh"
 #include "Renderer.hh"
 
-Button::Button(SDL_Rect rect, TTF_Font* font, const std::string& text, std::function<void()> click) 
+Button::Button(SDL_Rect rect, TTF_Font* font, const std::string& text, const std::function<void(Button&)>& click) 
 	: rect(rect), click(click)
 {
-	buttonSurface = SDL_CreateRGBSurface(0, rect.w, rect.h, 32, 0, 0, 0, 0);
+	SDL_Surface* buttonSurface = SDL_CreateRGBSurface(0, rect.w, rect.h, 32, 0, 0, 0, 0);
 
     // color the button
 	SDL_FillRect(buttonSurface, nullptr, SDL_MapRGB(buttonSurface->format, 255, 0, 0));
@@ -12,16 +12,30 @@ Button::Button(SDL_Rect rect, TTF_Font* font, const std::string& text, std::func
     buttonTexture = SDL_CreateTextureFromSurface(Renderer::get(), buttonSurface);
 
 	// create text inside the button
-	textSurface = TTF_RenderText_Solid(font, text.c_str(), { 255, 255, 255 });
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), { 255, 255, 255 });
 	textTexture = SDL_CreateTextureFromSurface(Renderer::get(), textSurface);
+
+	SDL_FreeSurface(buttonSurface);
+	SDL_FreeSurface(textSurface);
 }
 
 Button::~Button()
 {
-	SDL_FreeSurface(buttonSurface);
-	SDL_FreeSurface(textSurface);
-	SDL_DestroyTexture(textTexture);
-	SDL_DestroyTexture(buttonTexture);
+	if(textTexture) SDL_DestroyTexture(textTexture);
+	if(buttonTexture) SDL_DestroyTexture(buttonTexture);
+}
+
+Button::Button(Button&& button) 
+	: 	click(std::move(button.click)), isPressed(button.isPressed),
+		buttonTexture(button.buttonTexture), textTexture(button.textTexture)
+{
+	rect.x = button.rect.x;
+	rect.y = button.rect.y;
+	rect.w = button.rect.w;
+	rect.h = button.rect.h;
+
+	button.textTexture = nullptr;
+	button.buttonTexture = nullptr;
 }
 
 void Button::render()

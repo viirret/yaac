@@ -6,48 +6,49 @@
 #define ssize window.getSize()
 
 Program::Program(int argc, char** argv) 
-	: argc(argc), argv(argv), window(""),
-	mainFont(TTF_OpenFont("../assets/font.ttf", 24)),
-	clock(mainFont, ssize),
-	bgColor(255, 200, 244, 255)
+	: 	argc(argc), argv(argv), window(""),
+		mainFont(TTF_OpenFont("../assets/font.ttf", 24)),
+		clock(mainFont, ssize),
+		bgColor(255, 200, 244, 255)
 {
-	buttons.emplace_back(std::make_unique<Button>(
+	buttons.emplace_back(
 
-	// position and size for the button
-	SDL_Rect{ ssize.x / 2 - ssize.x / 8, ssize.y / 2 - ssize.y / 6, 50, 50 }, 
+		// position and size for the button
+		SDL_Rect{ ssize.x / 2 - ssize.x / 8, ssize.y / 2 - ssize.y / 6, 50, 50 }, 
 
-	// font and text
-	mainFont, "+", 
+		// font and text
+		mainFont, "+", 
 
-	// what happens when clicked
-	[&]()
-	{
-		buttons[0]->isPressed = true;
-	}));
-
+		// what happens when clicked
+		[](Button& button)
+		{
+			button.isPressed = true;
+		}
+	);
 
 	// create button that can test sounds
-	buttons.emplace_back(std::make_unique<Button>(
-	SDL_Rect{ ssize.x - ssize.x / 6, ssize.y / 8, 200, 50},
-	mainFont, "Test sounds",
-	[&]()
-	{
-		buttons[1]->isPressed = true;
-
-		// play clicksound
-		Mix_Music* click = Mix_LoadMUS("../assets/click.mp3");
-
-		if(!click)
+	buttons.emplace_back(
+		SDL_Rect{ ssize.x - ssize.x / 6, ssize.y / 8, 200, 50},
+		mainFont, "Test sounds",
+		[](Button& button)
 		{
-			std::cout << "Cannot find clicksound " << Mix_GetError() << std::endl;
-		}
+			button.isPressed = true;
 
-		if(Mix_PlayMusic(click, 0) == -1)
-		{
-			std::cout << "Cannot play clicksound " << Mix_GetError() << std::endl;
-		}
+			// play clicksound
+			Mix_Music* click = Mix_LoadMUS("../assets/click.mp3");
 
-	}));
+			if(!click)
+			{
+				std::cout << "Cannot find clicksound " << Mix_GetError() << std::endl;
+			}
+
+			if(Mix_PlayMusic(click, 0) == -1)
+			{
+				std::cout << "Cannot play clicksound " << Mix_GetError() << std::endl;
+			}
+
+		}
+	);
 
 	while(!close)
 	{
@@ -79,9 +80,10 @@ void Program::eventHandler()
 			// if any of the buttons is clicked
 			for(auto& b : buttons)
 			{
-				if(mouseX >= b->rect.x && mouseX <= b->rect.x + b->rect.w && mouseY >= b->rect.y && mouseY <= b->rect.y + b->rect.h)
+				if(mouseX >= b.rect.x && mouseX <= b.rect.x + b.rect.w && mouseY >= b.rect.y && mouseY <= b.rect.y + b.rect.h)
 				{
-					b->click();
+					if(b.click)
+						b.click(b);
 				}
 			}
         }
@@ -98,7 +100,7 @@ void Program::render()
 
 	// render buttons
 	for(auto& button : buttons) 
-		button->render();
+		button.render();
 
 	// main SDL rendering
 	Renderer::render();	

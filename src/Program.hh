@@ -9,7 +9,6 @@
 #include <SDL2/SDL_ttf.h>
 
 #include <vector>
-#include <memory>
 
 class Program
 {
@@ -32,7 +31,7 @@ private:
 	Color bgColor;
 
 	// there are multiple buttons in our alarm clock
-	std::vector<std::unique_ptr<Button>> buttons;
+	std::vector<Button> buttons;
 
 	bool close = false;
 
