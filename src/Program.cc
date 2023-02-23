@@ -1,12 +1,28 @@
 #include "Program.hh"
-#include <ctime>
+#include "Renderer.hh"
+
+#define ssize window.getSize()
 
 Program::Program(int argc, char** argv) 
-	: argc(argc), argv(argv), window(""), 
+	: argc(argc), argv(argv), window(""),
 	mainFont(TTF_OpenFont("../assets/font.ttf", 24)),
-	clock(mainFont),
+	clock(mainFont, ssize),
 	bgColor(255, 200, 244, 255)
 {
+	buttons.emplace_back(std::make_unique<Button>(
+
+	// position and size for the button
+	SDL_Rect{ ssize.x / 2 - ssize.x / 8, ssize.y / 2 - ssize.y / 6, 50, 50 }, 
+
+	// font and text
+	mainFont, "+", 
+
+	// what happens when clicked
+	[&]()
+	{
+		buttons.back()->isPressed = true;
+	}));
+
 	while(!close)
 	{
 		update();
@@ -26,6 +42,23 @@ void Program::eventHandler()
 	{
 		if((e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) || e.type == SDL_QUIT)
 			close = true;
+
+		// mouse is pressed
+		else if(e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) 
+		{
+			// get click position
+            int mouseX = e.button.x;
+            int mouseY = e.button.y;
+
+			// if any of the buttons is clicked
+			for(auto& b : buttons)
+			{
+				if(mouseX >= b->rect.x && mouseX <= b->rect.x + b->rect.w && mouseY >= b->rect.y && mouseY <= b->rect.y + b->rect.h)
+				{
+					b->click();
+				}
+			}
+        }
 	}
 }
 
@@ -36,6 +69,10 @@ void Program::render()
 	Renderer::clear();
 
 	clock.render();
+
+	// render buttons
+	for(auto& button : buttons) 
+		button->render();
 
 	// main SDL rendering
 	Renderer::render();	

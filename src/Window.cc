@@ -18,6 +18,7 @@ Window::Window(const std::string& title)
 	if(SDL_GetCurrentDisplayMode(0, &display))
 	{
 		std::cout << "Couldn't get display info: " << SDL_GetError() << std::endl;
+		return;
 	}
 
 	// create window	
@@ -53,6 +54,7 @@ Window::~Window()
 {
 	if(renderer) SDL_DestroyRenderer(renderer);
 	if(window) SDL_DestroyWindow(window);
+	TTF_Quit();
 	SDL_Quit();
 }
 
