@@ -1,34 +1,71 @@
 #include "Program.hh"
+#include "Button.hh"
 #include "Renderer.hh"
 
 #include <SDL2/SDL_mixer.h>
 
-#define ssize window.getSize()
+#define wsize window.getSize()
+#define bsize 50
 
 Program::Program(int argc, char** argv) 
 	: 	argc(argc), argv(argv), window(""),
 		mainFont(TTF_OpenFont("../assets/font.ttf", 24)),
-		clock(mainFont, ssize),
+		clock(mainFont, wsize),
 		bgColor(255, 200, 244, 255)
 {
-	buttons.emplace_back(
-
+	buttons.emplace_back
+	(
 		// position and size for the button
-		SDL_Rect{ ssize.x / 2 - ssize.x / 8, ssize.y / 2 - ssize.y / 6, 50, 50 }, 
+		SDL_Rect{ wsize.x / 2 - wsize.x / 8, wsize.y / 2 - wsize.y / 6, bsize, bsize }, 
 
 		// font and text
 		mainFont, "+", 
 
 		// what happens when clicked
-		[](Button& button)
+		[this](Button& button)
 		{
 			button.isPressed = true;
+			clock.addHour();
+		}
+	);
+
+	buttons.emplace_back
+	(
+		SDL_Rect{ wsize.x / 2 - wsize.x / 8, wsize.y / 2, bsize, bsize },
+		mainFont, "-",
+		[this](Button& button)
+		{
+			button.isPressed = true;
+			clock.removeHour();
+		}
+	);
+
+	buttons.emplace_back
+	(
+		SDL_Rect{ wsize.x / 2 + wsize.x / 8 - bsize, wsize.y / 2 - wsize.y / 6, bsize, bsize },
+		mainFont, "+",
+		[this](Button& button)
+		{
+			button.isPressed = true;
+			clock.addMinute();
+		}
+	);
+
+	buttons.emplace_back
+	(
+		SDL_Rect{ wsize.x / 2 + wsize.x / 8 - bsize, wsize.y / 2, bsize, bsize },
+		mainFont, "-",
+		[this](Button& button)
+		{
+			button.isPressed = true;
+			clock.removeMinute();
 		}
 	);
 
 	// create button that can test sounds
-	buttons.emplace_back(
-		SDL_Rect{ ssize.x - ssize.x / 6, ssize.y / 8, 200, 50},
+	buttons.emplace_back
+	(
+		SDL_Rect{ wsize.x - wsize.x / 6, wsize.y / 8, 200, bsize },
 		mainFont, "Test sounds",
 		[](Button& button)
 		{
@@ -46,7 +83,6 @@ Program::Program(int argc, char** argv)
 			{
 				std::cout << "Cannot play clicksound " << Mix_GetError() << std::endl;
 			}
-
 		}
 	);
 

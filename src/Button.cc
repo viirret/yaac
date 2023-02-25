@@ -21,8 +21,10 @@ Button::Button(SDL_Rect rect, TTF_Font* font, const std::string& text, const std
 
 Button::~Button()
 {
-	if(textTexture) SDL_DestroyTexture(textTexture);
-	if(buttonTexture) SDL_DestroyTexture(buttonTexture);
+	if(textTexture) 
+		SDL_DestroyTexture(textTexture);
+	if(buttonTexture)
+		SDL_DestroyTexture(buttonTexture);
 }
 
 Button::Button(Button&& button) 
