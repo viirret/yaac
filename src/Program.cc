@@ -3,6 +3,7 @@
 #include "Renderer.hh"
 
 #include <SDL2/SDL_mixer.h>
+#include <ctime>
 
 #define wsize window.getSize()
 #define bsize 50
@@ -62,10 +63,24 @@ Program::Program(int argc, char** argv)
 		}
 	);
 
+	buttons.emplace_back
+	(
+		// TODO this is not properly centered, I'll do this when I have time for styling
+	 	SDL_Rect{ wsize.x / 2 - bsize * 2, wsize.y / 2 + wsize.y / 6, bsize * 4, bsize },
+		mainFont, "Start alarm",
+
+		[this](Button& button)
+		{
+			clock.startTimer();
+			button.isPressed = true;
+		}
+
+	);
+
 	// create button that can test sounds
 	buttons.emplace_back
 	(
-		SDL_Rect{ wsize.x - wsize.x / 6, wsize.y / 8, 200, bsize },
+		SDL_Rect{ wsize.x - wsize.x / 6, wsize.y / 8, bsize * 4, bsize },
 		mainFont, "Test sounds",
 		[](Button& button)
 		{
@@ -95,6 +110,11 @@ Program::Program(int argc, char** argv)
 void Program::update()
 {
 	eventHandler();
+
+	// update clock timer if it's on
+	if(clock.timerOn)
+		clock.timerLoop();
+
 	render();
 }
 
