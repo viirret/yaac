@@ -46,11 +46,12 @@ private:
 	// sound that timer makes when done
 	Mix_Music* sound;
 
-	// when the clock is done
-	std::chrono::system_clock::time_point targetTime;
-	
 	// clock text is white, for now atleast
 	SDL_Color white = { 255, 255, 255, 255 };
+
+	std::chrono::hours::rep hoursLeft;
+	std::chrono::minutes::rep minutesLeft;
+	std::chrono::seconds::rep secondsLeft;
 
 	std::string timeToText();
 	void updateTexture();

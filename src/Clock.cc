@@ -19,8 +19,8 @@ Clock::Clock(TTF_Font* font, Vec2i screenSize)
 	// same for texture that tells how much time is left
 	timeLeftRect.w = 200;
 	timeLeftRect.h = 50;
-	timeLeftRect.x = screenSize.x / 2;
-	timeLeftRect.y = screenSize.y / 2;
+	timeLeftRect.x = screenSize.x / 2 - timeLeftRect.w / 2;
+	timeLeftRect.y = screenSize.y / 2 - timeLeftRect.h * 2;
 
 	updateTexture();
 }
@@ -82,14 +82,33 @@ void Clock::startTimer()
 		std::cout << "Cannot find clicksound " << Mix_GetError() << std::endl;
 	}
 
-	// get current system time
-    std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
+	// get current time in the local timezone
+	auto now = std::chrono::system_clock::now();
+    auto nowLocal = std::chrono::system_clock::to_time_t(now);
+    auto nowLocalTime = std::localtime(&nowLocal);
 
-    // set the target time
-	targetTime = currentTime + std::chrono::seconds(10);
+    // Construct a new time point for the target time of day
+    std::tm targetTime = *nowLocalTime;
+    targetTime.tm_hour = hours;
+    targetTime.tm_min = minutes;
+    targetTime.tm_sec = 0;
+	auto targetTimeT = std::mktime(&targetTime);
+    auto targetTimePoint = std::chrono::system_clock::from_time_t(targetTimeT);
+
+    // calculate the time difference between the current time and the target time
+	auto timeLeft = targetTimePoint - now;
+
+	// target is smaller than time (target is next day)
+	if(timeLeft <= std::chrono::seconds(0))
+		timeLeft += std::chrono::hours(24);
+
+	// convert the time difference to hours, minutes, and seconds
+    hoursLeft = std::chrono::duration_cast<std::chrono::hours>(timeLeft).count();
+    minutesLeft = std::chrono::duration_cast<std::chrono::minutes>(timeLeft).count() % 60;
+    secondsLeft = std::chrono::duration_cast<std::chrono::seconds>(timeLeft).count() % 60;
 
 	// create surface
-	SDL_Surface* surface = TTF_RenderText_Solid(font, "10", white);
+	SDL_Surface* surface = TTF_RenderText_Solid(font, "", white);
 
 	// update texture that tells how much time is left
 	timeLeftTex = SDL_CreateTextureFromSurface(Renderer::get(), surface);
@@ -109,14 +128,33 @@ void Clock::timerLoop()
 	{
        	lastPrintTime = now;
 
-        // how many seconds left in timer
-		auto timeLeftSeconds = std::chrono::duration_cast<std::chrono::seconds>(targetTime - now).count() + 1;
+		secondsLeft -= 1;
+
+		// TODO update all "left" variables
+
+		std::stringstream ss;
+
+		ss << hoursLeft << ":";
+
+		if(minutesLeft < 10)
+			ss << "0" << minutesLeft; 
+		else
+		 	ss << minutesLeft;
+
+		ss << ":";
+
+		if(secondsLeft < 10)
+			ss << "0" << secondsLeft;
+		else
+			ss << secondsLeft;
 
 		// update timer
-		SDL_Surface* surface = TTF_RenderText_Solid(font, std::to_string(timeLeftSeconds).c_str(), white);
+		SDL_Surface* surface = TTF_RenderText_Solid(font, ss.str().c_str(), white);
 		timeLeftTex = SDL_CreateTextureFromSurface(Renderer::get(), surface);
    	}
 
+	/*
+	 * TODO update if sentence
 	// timer has been reached
 	if(std::chrono::system_clock::now() >= targetTime)
 	{
@@ -132,6 +170,7 @@ void Clock::timerLoop()
 		// stop executing this loop
 		timerOn = false;
 	}
+	*/
 }
 
 void Clock::addHour()
