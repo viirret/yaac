@@ -53,8 +53,12 @@ private:
 	std::chrono::minutes::rep minutesLeft;
 	std::chrono::seconds::rep secondsLeft;
 
+	std::chrono::duration<double> timeLeft;
+
 	std::string timeToText();
 	void updateTexture();
+	void updateTime();
+	std::string createTimeString();
 
 	int hours = 0;
 	int minutes = 0;

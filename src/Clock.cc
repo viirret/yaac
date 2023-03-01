@@ -96,19 +96,17 @@ void Clock::startTimer()
     auto targetTimePoint = std::chrono::system_clock::from_time_t(targetTimeT);
 
     // calculate the time difference between the current time and the target time
-	auto timeLeft = targetTimePoint - now;
+	timeLeft = targetTimePoint - now;
 
 	// target is smaller than time (target is next day)
 	if(timeLeft <= std::chrono::seconds(0))
 		timeLeft += std::chrono::hours(24);
 
-	// convert the time difference to hours, minutes, and seconds
-    hoursLeft = std::chrono::duration_cast<std::chrono::hours>(timeLeft).count();
-    minutesLeft = std::chrono::duration_cast<std::chrono::minutes>(timeLeft).count() % 60;
-    secondsLeft = std::chrono::duration_cast<std::chrono::seconds>(timeLeft).count() % 60;
+	// update variables that tell how much time is remaining
+	updateTime();
 
 	// create surface
-	SDL_Surface* surface = TTF_RenderText_Solid(font, "", white);
+	SDL_Surface* surface = TTF_RenderText_Solid(font, createTimeString().c_str(), white);
 
 	// update texture that tells how much time is left
 	timeLeftTex = SDL_CreateTextureFromSurface(Renderer::get(), surface);
@@ -128,35 +126,17 @@ void Clock::timerLoop()
 	{
        	lastPrintTime = now;
 
-		secondsLeft -= 1;
-
-		// TODO update all "left" variables
-
-		std::stringstream ss;
-
-		ss << hoursLeft << ":";
-
-		if(minutesLeft < 10)
-			ss << "0" << minutesLeft; 
-		else
-		 	ss << minutesLeft;
-
-		ss << ":";
-
-		if(secondsLeft < 10)
-			ss << "0" << secondsLeft;
-		else
-			ss << secondsLeft;
+		// update time
+		timeLeft -= std::chrono::seconds(1);
+		updateTime();
 
 		// update timer
-		SDL_Surface* surface = TTF_RenderText_Solid(font, ss.str().c_str(), white);
+		SDL_Surface* surface = TTF_RenderText_Solid(font, createTimeString().c_str(), white);
 		timeLeftTex = SDL_CreateTextureFromSurface(Renderer::get(), surface);
    	}
 
-	/*
-	 * TODO update if sentence
 	// timer has been reached
-	if(std::chrono::system_clock::now() >= targetTime)
+	if(std::chrono::system_clock::now() >= std::chrono::system_clock::now() + timeLeft)
 	{
 		// play sound after timer is finished
     	if(Mix_PlayMusic(sound, 0) == -1) 
@@ -170,7 +150,34 @@ void Clock::timerLoop()
 		// stop executing this loop
 		timerOn = false;
 	}
-	*/
+}
+
+void Clock::updateTime()
+{
+	// convert the time difference to hours, minutes, and seconds
+    hoursLeft = std::chrono::duration_cast<std::chrono::hours>(timeLeft).count();
+    minutesLeft = std::chrono::duration_cast<std::chrono::minutes>(timeLeft).count() % 60;
+    secondsLeft = std::chrono::duration_cast<std::chrono::seconds>(timeLeft).count() % 60;
+}
+
+std::string Clock::createTimeString()
+{
+	std::stringstream ss;
+	ss << hoursLeft << ":";
+
+	if(minutesLeft < 10)
+		ss << "0" << minutesLeft; 
+	else
+		ss << minutesLeft;
+
+	ss << ":";
+
+	if(secondsLeft < 10)
+		ss << "0" << secondsLeft;
+	else
+		ss << secondsLeft;
+
+	return ss.str();
 }
 
 void Clock::addHour()
