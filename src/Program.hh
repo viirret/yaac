@@ -24,18 +24,23 @@ private:
 
 	// font used throughout this program
 	TTF_Font* mainFont;
-
-	Clock clock;
-
+	
 	// backgroundcolor
 	Color bgColor;
+
+	// the clock object that get's input from buttons here
+	Clock clock;
 
 	// there are multiple buttons in our alarm clock
 	std::vector<Button> buttons;
 
+	// is our program running
 	bool close = false;
 
+	// update clock object
 	void update();
+
+	// functions called by update
 	void eventHandler();
 	void render();
 };

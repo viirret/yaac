@@ -20,6 +20,6 @@ namespace Renderer
 
 	void setColor(Color color)
 	{
-		SDL_SetRenderDrawColor(renderer, color.R, color.G, color.B, color.A);
+		SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 	}
 }

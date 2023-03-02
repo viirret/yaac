@@ -12,7 +12,7 @@ Button::Button(SDL_Rect rect, TTF_Font* font, const std::string& text, const std
     buttonTexture = SDL_CreateTextureFromSurface(Renderer::get(), buttonSurface);
 
 	// create text inside the button
-	SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), { 255, 255, 255 });
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), { 255, 255, 255, 255 });
 	textTexture = SDL_CreateTextureFromSurface(Renderer::get(), textSurface);
 
 	SDL_FreeSurface(buttonSurface);

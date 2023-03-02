@@ -18,8 +18,8 @@ public:
 	Vec2i getSize() { return size; }
 
 private:
+	SDL_Window* window;
 	Vec2i size;
 
-	SDL_Window* window;
 	SDL_Renderer* renderer;
 };

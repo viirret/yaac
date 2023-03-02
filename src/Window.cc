@@ -8,17 +8,17 @@ Window::Window(const std::string& title)
 {
 	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 	{
-		std::cout << "Couldn't initialize SDL: " << SDL_GetError() << std::endl;
+		SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
 		return;
 	}
 
-	std::cout << "SDL Initialized" << std::endl;
+	SDL_Log("SDL Initialized");
 
 	// get monitor size
 	SDL_DisplayMode display;
 	if(SDL_GetCurrentDisplayMode(0, &display))
 	{
-		std::cout << "Couldn't get display info: " << SDL_GetError() << std::endl;
+		SDL_Log("Couldn't get display info: %s", SDL_GetError());
 		return;
 	}
 
@@ -26,7 +26,7 @@ Window::Window(const std::string& title)
 	window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, display.w, display.h, SDL_WINDOW_RESIZABLE);
 	if(!window)
 	{
-		std::cout << "Could't create window: " << std::endl;
+		SDL_Log("Could't create window");
 		return;
 	}
 
@@ -35,7 +35,7 @@ Window::Window(const std::string& title)
 
 	if(!renderer)
 	{
-		std::cout << "Could not create renderer: " << SDL_GetError() << std::endl;
+		SDL_Log("Could not create renderer: %s", SDL_GetError());
 		return;
 	}
 	else 
@@ -45,22 +45,24 @@ Window::Window(const std::string& title)
 
 	// update window size
 	SDL_GetWindowSize(window, &size.x, &size.y); 
-	std::cout << "Window created!" << std::endl;
+	SDL_Log("Window created!");
 
 	// initialize other SDL stuff
 	TTF_Init();
 
 	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 	{
-		std::cout << "Unable to open audio " << Mix_GetError() << std::endl;
+		SDL_Log("Unable to open audio %s", Mix_GetError());
 		return;
 	}
 }
 
 Window::~Window()
 {
-	if(renderer) SDL_DestroyRenderer(renderer);
-	if(window) SDL_DestroyWindow(window);
+	if(renderer) 
+		SDL_DestroyRenderer(renderer);
+	if(window) 
+		SDL_DestroyWindow(window);
 	Mix_CloseAudio();
 	TTF_Quit();
 	SDL_Quit();

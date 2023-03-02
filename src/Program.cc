@@ -1,9 +1,13 @@
 #include "Program.hh"
 #include "Button.hh"
+#include "Clock.hh"
 #include "Renderer.hh"
 
+#include <SDL2/SDL_events.h>
 #include <SDL2/SDL_mixer.h>
+
 #include <ctime>
+#include <string>
 
 #define wsize window.getSize()
 #define bsize 50
@@ -11,8 +15,8 @@
 Program::Program(int argc, char** argv) 
 	: 	argc(argc), argv(argv), window(""),
 		mainFont(TTF_OpenFont("../assets/font.ttf", 24)),
-		clock(mainFont, wsize),
-		bgColor(255, 200, 244, 255)
+		bgColor(255, 200, 244, 255),
+		clock(mainFont, wsize, &bgColor)
 {
 	buttons.emplace_back
 	(
@@ -25,7 +29,10 @@ Program::Program(int argc, char** argv)
 		// what happens when clicked
 		[this](Button& button)
 		{
+			// currently flicks color, could add something like sound later if want
 			button.isPressed = true;
+
+			// first clock function
 			clock.addHour();
 		}
 	);
@@ -71,8 +78,9 @@ Program::Program(int argc, char** argv)
 
 		[this](Button& button)
 		{
-			clock.startTimer();
 			button.isPressed = true;
+			clock.startTimer();
+			bgColor.black();
 		}
 
 	);
@@ -101,6 +109,7 @@ Program::Program(int argc, char** argv)
 		}
 	);
 
+	// main update loop
 	while(!close)
 	{
 		update();
@@ -111,9 +120,13 @@ void Program::update()
 {
 	eventHandler();
 
-	// update clock timer if it's on
-	if(clock.timerOn)
-		clock.timerLoop();
+	// update clock
+	switch(clock.state)
+	{
+		case ClockState::RINGING: clock.setClockToCurrentTime(); break;
+		case ClockState::RUNNING_TIMER: clock.timerLoop(); break;
+		case ClockState::NOT_SET: break;
+	}
 
 	render();
 }

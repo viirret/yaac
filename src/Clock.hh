@@ -2,6 +2,7 @@
 #define YAAC_CLOCK_HH
 
 #include "Vector2.hh"
+#include "Color.hh"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
@@ -10,11 +11,22 @@
 #include <chrono>
 #include <string>
 
+enum class ClockState
+{
+	NOT_SET,
+	RUNNING_TIMER,
+	RINGING
+};
+
 class Clock
 {
 public:
-	Clock(TTF_Font* font, Vec2i screenSize);
+	Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor);
 	~Clock();
+
+	// current state of this clock
+	ClockState state;
+
 	void render();
 	
 	// clock modifier functions
@@ -26,10 +38,21 @@ public:
 	// start timer
 	void startTimer();
 
-	// update timer texture
+	// update timer
 	void timerLoop();
 
-	bool timerOn = false;
+	// update main texture
+	void updateTexture();
+
+	// update normal mode
+	void setClockToCurrentTime();
+
+	// store selected file path
+	const char* filePath = nullptr;
+	bool fileSelected = false;
+
+	// sound that timer makes when done
+	Mix_Music* sound;
 
 private:
 	TTF_Font* font;
@@ -38,30 +61,33 @@ private:
 	SDL_Texture* texture;
 	
 	// how much time is left until timer is done
-	SDL_Texture* timeLeftTex = nullptr;
+	SDL_Texture* timeLeftTex;
 
 	// rect for the clock and timer
 	SDL_Rect rect, timeLeftRect;
 
-	// sound that timer makes when done
-	Mix_Music* sound;
+	// clock color (2 textures)
+	Color clockColor;
 
-	// clock text is white, for now atleast
-	SDL_Color white = { 255, 255, 255, 255 };
+	// backgroundColor in Program
+	Color* bgColor;
 
+	// how much time is left
+	std::chrono::duration<double> timeLeft;
 	std::chrono::hours::rep hoursLeft;
 	std::chrono::minutes::rep minutesLeft;
 	std::chrono::seconds::rep secondsLeft;
-
-	std::chrono::duration<double> timeLeft;
-
-	std::string timeToText();
-	void updateTexture();
-	void updateTime();
-	std::string createTimeString();
-
+	
+	// main texture:
+	// values
 	int hours = 0;
 	int minutes = 0;
+	int seconds = 0;
+
+	// timer texture:
+	std::string timeToText();
+	std::string createTimeString();
+	void updateClockValues();
 };
 
 #endif

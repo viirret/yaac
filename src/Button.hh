@@ -22,6 +22,8 @@ public:
 
 	bool isPressed = false;
 
+	// TODO add two Color's to buttons
+
 private:
 	// the actual button
 	SDL_Texture* buttonTexture;
