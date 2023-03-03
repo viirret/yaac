@@ -13,11 +13,17 @@
 #define bsize 50
 
 Program::Program(int argc, char** argv) 
-	: 	argc(argc), argv(argv), window(""),
+	: 	argc(argc), argv(argv), 
+		config("../config", '='),
+		window(""),
 		mainFont(TTF_OpenFont("../assets/font.ttf", 24)),
 		bgColor(255, 200, 244, 255),
 		clock(mainFont, wsize, &bgColor)
 {
+	// TODO assign bgColor from hex value
+	std::string hex = config.get("color");
+	SDL_Log("color=%s", hex.c_str());
+
 	buttons.emplace_back
 	(
 		// position and size for the button
@@ -126,7 +132,10 @@ void Program::update()
 		case ClockState::RINGING: clock.setClockToCurrentTime(); break;
 		case ClockState::RUNNING_TIMER: clock.timerLoop(); break;
 		case ClockState::NOT_SET: break;
+		case ClockState::SHOW_CLOCK: break;
 	}
+
+	clock.updateTexture();
 
 	render();
 }
@@ -156,6 +165,23 @@ void Program::eventHandler()
 				}
 			}
         }
+
+		// Handle key press event
+		else if (e.type == SDL_KEYDOWN) 
+		{
+			switch (e.key.keysym.sym) 
+			{
+				case SDLK_RETURN:
+				{
+					if(clock.state == ClockState::RINGING)
+					{
+						clock.state = ClockState::NOT_SET;
+						SDL_Log("Return key pressed, clockstate is back to normal(NOT_SET)");
+					}
+				}
+				break;
+			}
+		}
 	}
 }
 

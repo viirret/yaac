@@ -15,7 +15,8 @@ enum class ClockState
 {
 	NOT_SET,
 	RUNNING_TIMER,
-	RINGING
+	RINGING,
+	SHOW_CLOCK
 };
 
 class Clock

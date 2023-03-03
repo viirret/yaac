@@ -2,17 +2,21 @@
 #include "Renderer.hh"
 
 Button::Button(SDL_Rect rect, TTF_Font* font, const std::string& text, const std::function<void(Button&)>& click) 
-	: rect(rect), click(click)
+	: 	rect(rect), click(click), 
+		mainColor(255, 0, 0, 255),
+		textColor(255, 255, 255, 255),
+		blinkColor(0, 0, 0, 255)
 {
+	// create button surface
 	SDL_Surface* buttonSurface = SDL_CreateRGBSurface(0, rect.w, rect.h, 32, 0, 0, 0, 0);
 
-    // color the button
-	SDL_FillRect(buttonSurface, nullptr, SDL_MapRGB(buttonSurface->format, 255, 0, 0));
+	// mainColor
+	SDL_FillRect(buttonSurface, nullptr, SDL_MapRGB(buttonSurface->format, mainColor.r, mainColor.g, mainColor.b));
 
     buttonTexture = SDL_CreateTextureFromSurface(Renderer::get(), buttonSurface);
 
 	// create text inside the button
-	SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), { 255, 255, 255, 255 });
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor.getSDLColor());
 	textTexture = SDL_CreateTextureFromSurface(Renderer::get(), textSurface);
 
 	SDL_FreeSurface(buttonSurface);
@@ -29,7 +33,10 @@ Button::~Button()
 
 Button::Button(Button&& button) 
 	: 	click(std::move(button.click)), isPressed(button.isPressed),
-		buttonTexture(button.buttonTexture), textTexture(button.textTexture)
+		buttonTexture(button.buttonTexture), textTexture(button.textTexture),
+		mainColor(255, 0, 0, 255),
+		textColor(255, 255, 255, 255),
+		blinkColor(0, 255, 0, 255)
 {
 	rect.x = button.rect.x;
 	rect.y = button.rect.y;
@@ -51,7 +58,7 @@ void Button::render()
 	if(isPressed)
 	{
 	    // change the color for one frame
-		SDL_SetRenderDrawColor(Renderer::get(), 0, 255, 0, 255);
+		SDL_SetRenderDrawColor(Renderer::get(), blinkColor.r, blinkColor.g, blinkColor.b, blinkColor.a);
         SDL_RenderFillRect(Renderer::get(), &rect);
 
 		// go back to normal

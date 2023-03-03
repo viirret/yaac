@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_mixer.h>
+
 #include <chrono>
 #include <sstream>
 #include <string>
@@ -80,6 +81,21 @@ void Clock::updateTexture()
 
 void Clock::setClockToCurrentTime()
 {
+	//hours minutes seconds
+	//updateTexture();
+
+	if (state == ClockState::RINGING)
+	{
+		if (!Mix_PlayingMusic())
+		{
+			Mix_PlayMusic(sound, -1);
+		}
+	}
+	else 
+	{
+		SDL_Log("stopping music");
+		Mix_HaltMusic();
+	}
 }
 
 void Clock::startTimer()
@@ -174,10 +190,12 @@ void Clock::timerLoop()
 		clockColor.black();
 
 		// play sound after timer is finished
+		/*
     	if(Mix_PlayMusic(sound, 0) == -1) 
 		{
 			SDL_Log("Cannot play clicksound %s", Mix_GetError());
     	}
+		*/
 	}
 }
 

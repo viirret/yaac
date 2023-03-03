@@ -1,6 +1,8 @@
 #ifndef YAAC_BUTTON_HH
 #define YAAC_BUTTON_HH
 
+#include "Color.hh"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
@@ -15,14 +17,16 @@ public:
 	
 	Button(Button&& button);
 
+	Color mainColor;
+	Color textColor;
+	Color blinkColor;
+
 	void render();
 
 	SDL_Rect rect;
 	const std::function<void(Button&)> click;
 
 	bool isPressed = false;
-
-	// TODO add two Color's to buttons
 
 private:
 	// the actual button

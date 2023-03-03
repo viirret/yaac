@@ -1,6 +1,7 @@
 #ifndef YAAC_PROGRAM_HH
 #define YAAC_PROGRAM_HH
 
+#include "Config.hh"
 #include "Window.hh"
 #include "Color.hh"
 #include "Clock.hh"
@@ -18,6 +19,9 @@ private:
 	// cmd arguments
 	int argc;
 	char** argv;
+
+	// Configuration
+	Config config;
 
 	// window object that starts SDL
 	Window window;
