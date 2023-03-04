@@ -1,5 +1,6 @@
 #include "Clock.hh"
 #include "Renderer.hh"
+#include "Settings.hh"
 
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_mixer.h>
@@ -9,7 +10,7 @@
 #include <string>
 #include <ctime>
 
-Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor)
+Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, Config& config)
 	: 	state(ClockState::NOT_SET),
 		font(font), bgColor(bgColor),
 		clockColor(122, 122, 122, 122)
@@ -25,6 +26,26 @@ Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor)
 	timeLeftRect.h = 50;
 	timeLeftRect.x = screenSize.x / 2 - timeLeftRect.w / 2;
 	timeLeftRect.y = screenSize.y / 2 - timeLeftRect.h * 2;
+
+	// load sound from config
+	if(config.get("song") != "")
+	{
+		std::string song = Settings::SONGDIR + config.get("song");
+		sound = Mix_LoadMUS(song.c_str());
+	}
+
+	// load wakeup time from config
+	if(config.get("wakeup") != "")
+	{
+		std::stringstream ss(config.get("wakeup"));
+		std::string token;
+
+		std::getline(ss, token, ':');
+		hours = std::stoi(token);
+
+		std::getline(ss, token);
+		minutes = std::stoi(token);
+	}
 
 	updateTexture();
 }
@@ -81,29 +102,16 @@ void Clock::updateTexture()
 
 void Clock::setClockToCurrentTime()
 {
-	//hours minutes seconds
-	//updateTexture();
-
-	if (state == ClockState::RINGING)
+	if (!Mix_PlayingMusic())
 	{
-		if (!Mix_PlayingMusic())
-		{
-			Mix_PlayMusic(sound, -1);
-		}
+		Mix_PlayMusic(sound, -1);
 	}
-	else 
-	{
-		SDL_Log("stopping music");
-		Mix_HaltMusic();
-	}
+	//Mix_HaltMusic();
 }
 
 void Clock::startTimer()
 {
 	state = ClockState::RUNNING_TIMER;
-
-	// create sound
-	sound = Mix_LoadMUS(filePath);
 
 	if(!sound)
 	{
@@ -188,14 +196,6 @@ void Clock::timerLoop()
 
 		// change color of the clock numbers
 		clockColor.black();
-
-		// play sound after timer is finished
-		/*
-    	if(Mix_PlayMusic(sound, 0) == -1) 
-		{
-			SDL_Log("Cannot play clicksound %s", Mix_GetError());
-    	}
-		*/
 	}
 }
 

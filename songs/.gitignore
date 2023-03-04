@@ -1,0 +1,10 @@
+# ignore all audio files in this directory
+*.mp3
+*.wav
+*.ogg
+*.flac
+*.mid
+*.mod
+*.xm
+*.s3m
+*.it

@@ -1,6 +1,7 @@
 #ifndef YAAC_CLOCK_HH
 #define YAAC_CLOCK_HH
 
+#include "Config.hh"
 #include "Vector2.hh"
 #include "Color.hh"
 
@@ -22,7 +23,7 @@ enum class ClockState
 class Clock
 {
 public:
-	Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor);
+	Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, Config& config);
 	~Clock();
 
 	// current state of this clock
@@ -48,14 +49,10 @@ public:
 	// update normal mode
 	void setClockToCurrentTime();
 
-	// store selected file path
-	const char* filePath = nullptr;
-	bool fileSelected = false;
-
+private:
 	// sound that timer makes when done
 	Mix_Music* sound;
 
-private:
 	TTF_Font* font;
 
 	// texture for the main clock

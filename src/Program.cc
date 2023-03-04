@@ -2,28 +2,30 @@
 #include "Button.hh"
 #include "Clock.hh"
 #include "Renderer.hh"
+#include "Util.hh"
 
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_mixer.h>
 
 #include <ctime>
+#include <sstream>
 #include <string>
 
+// button size configuration
 #define wsize window.getSize()
 #define bsize 50
+
+// default configuration (error in configuration file)
+#define defaultBackgroundColor Color(255, 255, 255, 255)
 
 Program::Program(int argc, char** argv) 
 	: 	argc(argc), argv(argv), 
 		config("../config", '='),
 		window(""),
 		mainFont(TTF_OpenFont("../assets/font.ttf", 24)),
-		bgColor(255, 200, 244, 255),
-		clock(mainFont, wsize, &bgColor)
+		bgColor(Util::readHexColor(config.get("color"), defaultBackgroundColor)),
+		clock(mainFont, wsize, &bgColor, config)
 {
-	// TODO assign bgColor from hex value
-	std::string hex = config.get("color");
-	SDL_Log("color=%s", hex.c_str());
-
 	buttons.emplace_back
 	(
 		// position and size for the button
@@ -171,7 +173,7 @@ void Program::eventHandler()
 		{
 			switch (e.key.keysym.sym) 
 			{
-				case SDLK_RETURN:
+				case SDLK_SPACE:
 				{
 					if(clock.state == ClockState::RINGING)
 					{
@@ -200,5 +202,4 @@ void Program::render()
 	// main SDL rendering
 	Renderer::render();	
 }
-
 
