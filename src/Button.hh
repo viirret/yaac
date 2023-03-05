@@ -2,6 +2,7 @@
 #define YAAC_BUTTON_HH
 
 #include "Color.hh"
+#include "Config.hh"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -12,12 +13,12 @@
 class Button
 {
 public:
-	Button(SDL_Rect rect, TTF_Font* font, const std::string& text, const std::function<void(Button&)>& click);
+	Button(const SDL_Rect& rect, TTF_Font* font, const std::string& text, const std::function<void(Button&)>& click, Config& config);
 	~Button();
 	
 	Button(Button&& button);
 
-	Color mainColor;
+	Color buttonColor;
 	Color textColor;
 	Color blinkColor;
 

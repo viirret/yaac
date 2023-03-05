@@ -1,17 +1,23 @@
 #include "Button.hh"
 #include "Renderer.hh"
+#include "Util.hh"
 
-Button::Button(SDL_Rect rect, TTF_Font* font, const std::string& text, const std::function<void(Button&)>& click)
+// default colors if config file fails
+#define buttonColorDefault Color(255, 0, 0, 255)
+#define buttonTextDefault Color(255, 255, 255, 255)
+#define buttonBlinkDefault Color(0, 255, 0, 255)
+
+Button::Button(const SDL_Rect& rect, TTF_Font* font, const std::string& text, const std::function<void(Button&)>& click, Config& config)
     : rect(rect), click(click),
-      mainColor(255, 0, 0, 255),
-      textColor(255, 255, 255, 255),
-      blinkColor(0, 0, 0, 255)
+	  buttonColor(Util::readHexColor(config.get("buttonColor"), buttonColorDefault)),
+      textColor(Util::readHexColor(config.get("buttonText"), buttonTextDefault)),
+      blinkColor(Util::readHexColor(config.get("buttonBlink"), buttonBlinkDefault))
 {
     // create button surface
     SDL_Surface* buttonSurface = SDL_CreateRGBSurface(0, rect.w, rect.h, 32, 0, 0, 0, 0);
 
     // mainColor
-    SDL_FillRect(buttonSurface, nullptr, SDL_MapRGB(buttonSurface->format, mainColor.r, mainColor.g, mainColor.b));
+    SDL_FillRect(buttonSurface, nullptr, SDL_MapRGB(buttonSurface->format, buttonColor.r, buttonColor.g, buttonColor.b));
 
     buttonTexture = SDL_CreateTextureFromSurface(Renderer::get(), buttonSurface);
 
@@ -33,10 +39,7 @@ Button::~Button()
 
 Button::Button(Button&& button)
     : click(std::move(button.click)), isPressed(button.isPressed),
-      buttonTexture(button.buttonTexture), textTexture(button.textTexture),
-      mainColor(255, 0, 0, 255),
-      textColor(255, 255, 255, 255),
-      blinkColor(0, 255, 0, 255)
+      buttonTexture(button.buttonTexture), textTexture(button.textTexture)
 {
     rect.x = button.rect.x;
     rect.y = button.rect.y;

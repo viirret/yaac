@@ -1,3 +1,13 @@
-color=#F0C80E
 song=huomenta.mp3
 wakeup=8:00
+
+# backgroundcolor
+color=#FFFF66
+
+# color in clock and timer
+clockColor=#606060
+
+# button configuration
+buttonColor=#FF0000
+buttonText=#FFFFFF
+buttonBlink=#00FF00

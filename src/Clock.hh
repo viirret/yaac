@@ -23,7 +23,7 @@ enum class ClockState
 class Clock
 {
 public:
-	Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, Config& config);
+	Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& config);
 	~Clock();
 
 	// current state of this clock

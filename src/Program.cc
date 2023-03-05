@@ -41,7 +41,8 @@ Program::Program(int argc, char** argv)
 
             // first clock function
             clock.addHour();
-        });
+        }, config
+		);
 
     buttons.emplace_back(
         SDL_Rect{wsize.x / 2 - wsize.x / 8, wsize.y / 2, bsize, bsize},
@@ -50,7 +51,8 @@ Program::Program(int argc, char** argv)
         {
             button.isPressed = true;
             clock.removeHour();
-        });
+        }, config
+		);
 
     buttons.emplace_back(
         SDL_Rect{wsize.x / 2 + wsize.x / 8 - bsize, wsize.y / 2 - wsize.y / 6, bsize, bsize},
@@ -59,7 +61,8 @@ Program::Program(int argc, char** argv)
         {
             button.isPressed = true;
             clock.addMinute();
-        });
+        }, config
+		);
 
     buttons.emplace_back(
         SDL_Rect{wsize.x / 2 + wsize.x / 8 - bsize, wsize.y / 2, bsize, bsize},
@@ -68,7 +71,8 @@ Program::Program(int argc, char** argv)
         {
             button.isPressed = true;
             clock.removeMinute();
-        });
+        }, config
+		);
 
     buttons.emplace_back(
         // TODO this is not properly centered, I'll do this when I have time for styling
@@ -80,8 +84,7 @@ Program::Program(int argc, char** argv)
             button.isPressed = true;
             clock.startTimer();
             bgColor.black();
-        }
-
+        }, config
     );
 
     // create button that can test sounds
@@ -104,7 +107,8 @@ Program::Program(int argc, char** argv)
             {
                 std::cout << "Cannot play clicksound " << Mix_GetError() << std::endl;
             }
-        });
+        }, config
+		);
 
     // main update loop
     while (!close)

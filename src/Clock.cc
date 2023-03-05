@@ -1,6 +1,8 @@
 #include "Clock.hh"
+#include "Color.hh"
 #include "Renderer.hh"
 #include "Settings.hh"
+#include "Util.hh"
 
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_mixer.h>
@@ -10,10 +12,12 @@
 #include <sstream>
 #include <string>
 
-Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, Config& config)
+#define clockColorDefault Color(122, 122, 122, 255)
+
+Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& config)
     : state(ClockState::NOT_SET),
       font(font), bgColor(bgColor),
-      clockColor(122, 122, 122, 122)
+	  clockColor(Util::readHexColor(config.get("clockColor"), clockColorDefault))
 {
     // define clock size and position
     rect.w = 200;
@@ -115,13 +119,7 @@ void Clock::startTimer()
 
     if (!sound)
     {
-        SDL_Log("CANNOT FIND SOUND %s", Mix_GetError());
-
-        // LOAD CONFIG HERE
-
-        SDL_Log("CANNOT FIND CONFIG %s", Mix_GetError());
-
-        SDL_Log("USING DEFAULT SOUND");
+        SDL_Log("CANNOT FIND CONFIG, USING DEFAULT SOUND");
         sound = Mix_LoadMUS("../assets/default.mp3");
         if (!sound)
         {
