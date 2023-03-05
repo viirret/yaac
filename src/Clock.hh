@@ -1,9 +1,9 @@
 #ifndef YAAC_CLOCK_HH
 #define YAAC_CLOCK_HH
 
+#include "Color.hh"
 #include "Config.hh"
 #include "Vector2.hh"
-#include "Color.hh"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
@@ -14,78 +14,78 @@
 
 enum class ClockState
 {
-	NOT_SET,
-	RUNNING_TIMER,
-	RINGING,
-	SHOW_CLOCK
+    NOT_SET,
+    RUNNING_TIMER,
+    RINGING,
+    SHOW_CLOCK
 };
 
 class Clock
 {
 public:
-	Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& config);
-	~Clock();
+    Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& config);
+    ~Clock();
 
-	// current state of this clock
-	ClockState state;
+    // current state of this clock
+    ClockState state;
 
-	void render();
-	
-	// clock modifier functions
-	void addHour();
-	void removeHour();
-	void addMinute();
-	void removeMinute();
+    void render();
 
-	// start timer
-	void startTimer();
+    // clock modifier functions
+    void addHour();
+    void removeHour();
+    void addMinute();
+    void removeMinute();
 
-	// update timer
-	void timerLoop();
+    // start timer
+    void startTimer();
 
-	// update main texture
-	void updateTexture();
+    // update timer
+    void timerLoop();
 
-	// update normal mode
-	void setClockToCurrentTime();
+    // update main texture
+    void updateTexture();
+
+    // update normal mode
+    void setClockToCurrentTime();
 
 private:
-	// sound that timer makes when done
-	Mix_Music* sound;
+    // sound that timer makes when done
+    Mix_Music* sound;
 
-	TTF_Font* font;
+    TTF_Font* font;
 
-	// texture for the main clock
-	SDL_Texture* texture;
-	
-	// how much time is left until timer is done
-	SDL_Texture* timeLeftTex;
+    // texture for the main clock
+    SDL_Texture* texture;
 
-	// rect for the clock and timer
-	SDL_Rect rect, timeLeftRect;
+    // how much time is left until timer is done
+    SDL_Texture* timeLeftTex;
 
-	// clock color (2 textures)
-	Color clockColor;
+    // rect for the clock and timer
+    SDL_Rect rect, timeLeftRect;
 
-	// backgroundColor in Program
-	Color* bgColor;
+    // clock color (2 textures)
+    Color clockColor;
 
-	// how much time is left
-	std::chrono::duration<double> timeLeft;
-	std::chrono::hours::rep hoursLeft;
-	std::chrono::minutes::rep minutesLeft;
-	std::chrono::seconds::rep secondsLeft;
-	
-	// main texture:
-	// values
-	int hours = 0;
-	int minutes = 0;
-	int seconds = 0;
+    // backgroundColor in Program
+    Color* bgColor;
 
-	// timer texture:
-	std::string timeToText();
-	std::string createTimeString();
-	void updateClockValues();
+    // how much time is left
+    std::chrono::duration<double> timeLeft;
+    std::chrono::hours::rep hoursLeft;
+    std::chrono::minutes::rep minutesLeft;
+    std::chrono::seconds::rep secondsLeft;
+
+    // main texture:
+    // values
+    int hours = 0;
+    int minutes = 0;
+    int seconds = 0;
+
+    // timer texture:
+    std::string timeToText();
+    std::string createTimeString();
+    void updateClockValues();
 };
 
 #endif

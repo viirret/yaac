@@ -7,13 +7,12 @@
 
 namespace Renderer
 {
-	SDL_Renderer* get();
-	void set(SDL_Renderer* ren);
+SDL_Renderer* get();
+void set(SDL_Renderer* ren);
 
-	void render();
-	void clear();
-	void setColor(Color color);
-}
+void render();
+void clear();
+void setColor(Color color);
+} // namespace Renderer
 
 #endif
-

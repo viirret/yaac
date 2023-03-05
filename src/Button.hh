@@ -7,34 +7,36 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
-#include <string>
 #include <functional>
+#include <string>
 
 class Button
 {
 public:
-	Button(const SDL_Rect& rect, TTF_Font* font, const std::string& text, const std::function<void(Button&)>& click, Config& config);
-	~Button();
-	
-	Button(Button&& button);
+    Button(const SDL_Rect& rect, TTF_Font* font, const std::string& text, const std::function<void(Button&)>& click, Config& config);
+    ~Button();
 
-	Color buttonColor;
-	Color textColor;
-	Color blinkColor;
+    Button(Button&& button);
 
-	void render();
+    void render();
 
-	SDL_Rect rect;
-	const std::function<void(Button&)> click;
+    SDL_Rect rect;
 
-	bool isPressed = false;
+    bool isPressed = false;
+
+    const std::function<void(Button&)> click;
 
 private:
-	// the actual button
-	SDL_Texture* buttonTexture;
-	
-	// text inside the button
-	SDL_Texture* textTexture;
+    // the actual button
+    SDL_Texture* buttonTexture;
+
+    // text inside the button
+    SDL_Texture* textTexture;
+
+    // button colors
+    Color buttonColor;
+    Color textColor;
+    Color blinkColor;
 };
 
 #endif

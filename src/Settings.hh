@@ -5,7 +5,7 @@
 
 namespace Settings
 {
-	const std::string SONGDIR = "../songs/";
+const std::string SONGDIR = "../songs/";
 }
 
 #endif

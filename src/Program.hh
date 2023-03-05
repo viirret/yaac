@@ -1,11 +1,11 @@
 #ifndef YAAC_PROGRAM_HH
 #define YAAC_PROGRAM_HH
 
+#include "Button.hh"
+#include "Clock.hh"
+#include "Color.hh"
 #include "Config.hh"
 #include "Window.hh"
-#include "Color.hh"
-#include "Clock.hh"
-#include "Button.hh"
 
 #include <SDL2/SDL_ttf.h>
 
@@ -14,39 +14,40 @@
 class Program
 {
 public:
-	Program(int argc, char** argv);
+    Program(int argc, char** argv);
+
 private:
-	// cmd arguments
-	int argc;
-	char** argv;
+    // cmd arguments
+    int argc;
+    char** argv;
 
-	// Configuration
-	Config config;
+    // Configuration
+    Config config;
 
-	// window object that starts SDL
-	Window window;
+    // window object that starts SDL
+    Window window;
 
-	// font used throughout this program
-	TTF_Font* mainFont;
-	
-	// backgroundcolor
-	Color bgColor;
+    // font used throughout this program
+    TTF_Font* mainFont;
 
-	// the clock object that get's input from buttons here
-	Clock clock;
+    // backgroundcolor
+    Color bgColor;
 
-	// there are multiple buttons in our alarm clock
-	std::vector<Button> buttons;
+    // the clock object that get's input from buttons here
+    Clock clock;
 
-	// is our program running
-	bool close = false;
+    // there are multiple buttons in our alarm clock
+    std::vector<Button> buttons;
 
-	// update clock object
-	void update();
+    // is our program running
+    bool close = false;
 
-	// functions called by update
-	void eventHandler();
-	void render();
+    // update clock object
+    void update();
+
+    // functions called by update
+    void eventHandler();
+    void render();
 };
 
 #endif

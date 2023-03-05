@@ -11,10 +11,11 @@
 class Config
 {
 public:
-	Config(const std::string& fileName, char delimiter);
-	std::string get(const std::string& key) const;
+    Config(const std::string& fileName, char delimiter);
+    std::string get(const std::string& key) const;
+
 private:
-	std::unordered_map<std::string, std::string> configData;
+    std::unordered_map<std::string, std::string> configData;
 };
 
 #endif

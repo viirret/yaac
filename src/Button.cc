@@ -9,7 +9,7 @@
 
 Button::Button(const SDL_Rect& rect, TTF_Font* font, const std::string& text, const std::function<void(Button&)>& click, Config& config)
     : rect(rect), click(click),
-	  buttonColor(Util::readHexColor(config.get("buttonColor"), buttonColorDefault)),
+      buttonColor(Util::readHexColor(config.get("buttonColor"), buttonColorDefault)),
       textColor(Util::readHexColor(config.get("buttonText"), buttonTextDefault)),
       blinkColor(Util::readHexColor(config.get("buttonBlink"), buttonBlinkDefault))
 {

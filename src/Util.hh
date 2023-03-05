@@ -5,7 +5,7 @@
 
 namespace Util
 {
-	Color readHexColor(std::string hex, const Color& defaultColor);
+Color readHexColor(std::string hex, const Color& defaultColor);
 }
 
 #endif

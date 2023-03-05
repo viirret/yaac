@@ -17,7 +17,7 @@
 Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& config)
     : state(ClockState::NOT_SET),
       font(font), bgColor(bgColor),
-	  clockColor(Util::readHexColor(config.get("clockColor"), clockColorDefault))
+      clockColor(Util::readHexColor(config.get("clockColor"), clockColorDefault))
 {
     // define clock size and position
     rect.w = 200;
