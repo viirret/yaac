@@ -1,8 +1,8 @@
 song=huomenta.mp3
-wakeup=8:00
+wakeup=18:00
 
 # backgroundcolor
-color=#FFFF66
+color=#77f2f2
 
 # color in clock and timer
 clockColor=#606060
