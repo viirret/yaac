@@ -3,7 +3,6 @@
 
 #include "Button.hh"
 #include "Clock.hh"
-#include "Color.hh"
 #include "Config.hh"
 #include "Window.hh"
 

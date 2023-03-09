@@ -10,7 +10,6 @@
 #include <SDL2/SDL_ttf.h>
 
 #include <chrono>
-#include <string>
 
 enum class ClockState
 {
@@ -59,7 +58,7 @@ private:
     SDL_Texture* texture;
 
     // how much time is left until timer is done
-    SDL_Texture* timeLeftTex;
+    SDL_Texture* timeLeftTex = nullptr;
 
     // rect for the clock and timer
     SDL_Rect rect, timeLeftRect;

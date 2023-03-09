@@ -16,15 +16,17 @@ Button::Button(const SDL_Rect& rect, TTF_Font* font, const std::string& text, co
     // create button surface
     SDL_Surface* buttonSurface = SDL_CreateRGBSurface(0, rect.w, rect.h, 32, 0, 0, 0, 0);
 
-    // mainColor
+    // add primary color
     SDL_FillRect(buttonSurface, nullptr, SDL_MapRGB(buttonSurface->format, buttonColor.r, buttonColor.g, buttonColor.b));
 
+    // create "main" texture
     buttonTexture = SDL_CreateTextureFromSurface(Renderer::get(), buttonSurface);
 
     // create text inside the button
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor.getSDLColor());
     textTexture = SDL_CreateTextureFromSurface(Renderer::get(), textSurface);
 
+    // free surfaces
     SDL_FreeSurface(buttonSurface);
     SDL_FreeSurface(textSurface);
 }

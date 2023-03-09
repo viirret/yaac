@@ -1,4 +1,6 @@
 #include "Util.hh"
+#include "Settings.hh"
+#include <SDL2/SDL_mixer.h>
 
 namespace Util
 {
@@ -33,6 +35,11 @@ Color readHexColor(std::string hex, const Color& defaultColor)
 
         return defaultColor;
     }
+}
+
+Mix_Music* loadMusic(const std::string& path)
+{
+    return Mix_LoadMUS((Settings::SONGDIR + path).c_str());
 }
 
 } // namespace Util

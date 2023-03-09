@@ -4,9 +4,9 @@
 #include "Settings.hh"
 #include "Util.hh"
 
-#include <SDL2/SDL_error.h>
 #include <SDL2/SDL_mixer.h>
 
+#include <SDL2/SDL_surface.h>
 #include <chrono>
 #include <ctime>
 #include <sstream>
@@ -34,8 +34,7 @@ Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& con
     // load sound from config
     if (config.get("song") != "")
     {
-        std::string song = Settings::SONGDIR + config.get("song");
-        sound = Mix_LoadMUS(song.c_str());
+        sound = Util::loadMusic(config.get("song"));
     }
 
     // load wakeup time from config
@@ -64,7 +63,8 @@ Clock::~Clock()
 
 void Clock::render()
 {
-    SDL_RenderCopy(Renderer::get(), texture, nullptr, &rect);
+    if (texture)
+        SDL_RenderCopy(Renderer::get(), texture, nullptr, &rect);
 
     if (timeLeftTex)
         SDL_RenderCopy(Renderer::get(), timeLeftTex, nullptr, &timeLeftRect);
@@ -102,6 +102,8 @@ void Clock::updateTexture()
 
     // update texture
     texture = SDL_CreateTextureFromSurface(Renderer::get(), surface);
+
+    SDL_FreeSurface(surface);
 }
 
 void Clock::setClockToCurrentTime()
@@ -119,12 +121,12 @@ void Clock::startTimer()
 
     if (!sound)
     {
-        SDL_Log("CANNOT FIND CONFIG, USING DEFAULT SOUND");
+        // load default sound
         sound = Mix_LoadMUS("../assets/default.mp3");
         if (!sound)
-        {
             SDL_Log("NO SOUND!!! %s %s", Mix_GetError(), SDL_GetError());
-        }
+        else
+            SDL_Log("CANNOT FIND CONFIG, USING DEFAULT SOUND");
     }
 
     // get current time in the local timezone

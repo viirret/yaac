@@ -177,7 +177,11 @@ void Program::eventHandler()
                     if (clock.state == ClockState::RINGING)
                     {
                         clock.state = ClockState::NOT_SET;
-                        SDL_Log("Return key pressed, clockstate is back to normal(NOT_SET)");
+                        SDL_Log("Space key pressed, clockstate is back to normal(NOT_SET)");
+                    }
+                    else
+                    {
+                        SDL_Log("Space key pressed, while clock is not ringing");
                     }
                 }
                 break;
