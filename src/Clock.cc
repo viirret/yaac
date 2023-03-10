@@ -161,6 +161,9 @@ void Clock::startTimer()
 
     // update texture that tells how much time is left
     timeLeftTex = SDL_CreateTextureFromSurface(Renderer::get(), surface);
+
+	// delete surface
+	SDL_FreeSurface(surface);
 }
 
 void Clock::timerLoop()
@@ -181,6 +184,7 @@ void Clock::timerLoop()
         // update timer
         SDL_Surface* surface = TTF_RenderText_Solid(font, createTimeString().c_str(), clockColor.getSDLColor());
         timeLeftTex = SDL_CreateTextureFromSurface(Renderer::get(), surface);
+		SDL_FreeSurface(surface);
     }
 
     // timer has been reached
