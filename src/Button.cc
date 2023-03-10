@@ -54,19 +54,22 @@ Button::Button(Button&& button)
 
 void Button::render()
 {
-    // button
-    SDL_RenderCopy(Renderer::get(), buttonTexture, nullptr, &rect);
-
-    // text inside it
-    SDL_RenderCopy(Renderer::get(), textTexture, nullptr, &rect);
-
-    if (isPressed)
+    if (draw)
     {
-        // change the color for one frame
-        SDL_SetRenderDrawColor(Renderer::get(), blinkColor.r, blinkColor.g, blinkColor.b, blinkColor.a);
-        SDL_RenderFillRect(Renderer::get(), &rect);
+        // button
+        SDL_RenderCopy(Renderer::get(), buttonTexture, nullptr, &rect);
 
-        // go back to normal
-        isPressed = false;
+        // text inside it
+        SDL_RenderCopy(Renderer::get(), textTexture, nullptr, &rect);
+
+        if (isPressed)
+        {
+            // change the color for one frame
+            SDL_SetRenderDrawColor(Renderer::get(), blinkColor.r, blinkColor.g, blinkColor.b, blinkColor.a);
+            SDL_RenderFillRect(Renderer::get(), &rect);
+
+            // go back to normal
+            isPressed = false;
+        }
     }
 }

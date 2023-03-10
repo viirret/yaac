@@ -1,6 +1,7 @@
 #ifndef YAAC_CLOCK_HH
 #define YAAC_CLOCK_HH
 
+#include "Button.hh"
 #include "Color.hh"
 #include "Config.hh"
 #include "Vector2.hh"
@@ -45,12 +46,15 @@ public:
     // update main texture
     void updateTexture();
 
-    // update normal mode
-    void setClockToCurrentTime();
+    // play song when ringing
+    void loopSong();
+
+    // just show normal clock after ringing is done
+    void showTime();
 
 private:
     // sound that timer makes when done
-    Mix_Music* sound;
+    Mix_Music* sound = nullptr;
 
     TTF_Font* font;
 
@@ -68,6 +72,7 @@ private:
 
     // backgroundColor in Program
     Color* bgColor;
+    Color originalBgColor;
 
     // how much time is left
     std::chrono::duration<double> timeLeft;

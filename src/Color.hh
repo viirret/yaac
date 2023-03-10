@@ -51,12 +51,28 @@ struct Color
         a = 0;
     }
 
+    void red()
+    {
+        r = 255;
+        b = 0;
+        g = 0;
+        a = 0;
+    }
+
     void change(int r, int g, int b, int a)
     {
         this->r = r;
         this->g = g;
         this->b = b;
         this->a = a;
+    }
+
+    void change(const Color& color)
+    {
+        this->r = color.r;
+        this->g = color.g;
+        this->b = color.b;
+        this->a = color.a;
     }
 
     int r, g, b, a;

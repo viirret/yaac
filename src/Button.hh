@@ -8,7 +8,6 @@
 #include <SDL2/SDL_ttf.h>
 
 #include <functional>
-#include <string>
 
 class Button
 {
@@ -23,6 +22,7 @@ public:
     SDL_Rect rect;
 
     bool isPressed = false;
+    bool draw = true;
 
     const std::function<void(Button&)> click;
 

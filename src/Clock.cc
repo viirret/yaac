@@ -16,7 +16,7 @@
 
 Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& config)
     : state(ClockState::NOT_SET),
-      font(font), bgColor(bgColor),
+      font(font), bgColor(bgColor), originalBgColor(*bgColor),
       clockColor(Util::readHexColor(config.get("clockColor"), clockColorDefault))
 {
     // define clock size and position
@@ -70,6 +70,20 @@ void Clock::render()
         SDL_RenderCopy(Renderer::get(), timeLeftTex, nullptr, &timeLeftRect);
 }
 
+void Clock::showTime()
+{
+    if (Mix_PlayingMusic())
+    {
+        // stop playing music
+        Mix_HaltMusic();
+
+        // change backgroundcolor back to normal
+        bgColor->change(originalBgColor);
+    }
+
+    // update clock here
+}
+
 std::string Clock::timeToText()
 {
     std::stringstream ss;
@@ -106,13 +120,10 @@ void Clock::updateTexture()
     SDL_FreeSurface(surface);
 }
 
-void Clock::setClockToCurrentTime()
+void Clock::loopSong()
 {
     if (!Mix_PlayingMusic())
-    {
         Mix_PlayMusic(sound, -1);
-    }
-    // Mix_HaltMusic();
 }
 
 void Clock::startTimer()
@@ -124,9 +135,14 @@ void Clock::startTimer()
         // load default sound
         sound = Mix_LoadMUS("../assets/default.mp3");
         if (!sound)
+        {
             SDL_Log("NO SOUND!!! %s %s", Mix_GetError(), SDL_GetError());
+            bgColor->red();
+        }
         else
+        {
             SDL_Log("CANNOT FIND CONFIG, USING DEFAULT SOUND");
+        }
     }
 
     // get current time in the local timezone
@@ -162,8 +178,8 @@ void Clock::startTimer()
     // update texture that tells how much time is left
     timeLeftTex = SDL_CreateTextureFromSurface(Renderer::get(), surface);
 
-	// delete surface
-	SDL_FreeSurface(surface);
+    // delete surface
+    SDL_FreeSurface(surface);
 }
 
 void Clock::timerLoop()
@@ -184,7 +200,7 @@ void Clock::timerLoop()
         // update timer
         SDL_Surface* surface = TTF_RenderText_Solid(font, createTimeString().c_str(), clockColor.getSDLColor());
         timeLeftTex = SDL_CreateTextureFromSurface(Renderer::get(), surface);
-		SDL_FreeSurface(surface);
+        SDL_FreeSurface(surface);
     }
 
     // timer has been reached
@@ -197,9 +213,6 @@ void Clock::timerLoop()
 
         // make the backgroundColor white
         bgColor->white();
-
-        // change color of the clock numbers
-        clockColor.black();
     }
 }
 

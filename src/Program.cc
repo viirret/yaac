@@ -82,8 +82,8 @@ Program::Program(int argc, char** argv)
         [this](Button& button)
         {
             button.isPressed = true;
-            clock.startTimer();
             bgColor.black();
+            clock.startTimer();
         },
         config);
 
@@ -110,6 +110,20 @@ Program::Program(int argc, char** argv)
         },
         config);
 
+    // the reset button
+    buttons.emplace_back(
+        SDL_Rect{wsize.x / 2 - bsize * 2, wsize.y / 10, bsize * 4, bsize},
+        mainFont, "Reset clock",
+        [this](Button& button)
+        {
+            button.isPressed = true;
+            button.draw = false;
+            clock.state = ClockState::NOT_SET;
+        },
+        config);
+
+    buttons.back().draw = false;
+
     // main update loop
     while (!close)
     {
@@ -125,7 +139,7 @@ void Program::update()
     switch (clock.state)
     {
         case ClockState::RINGING:
-            clock.setClockToCurrentTime();
+            clock.loopSong();
             break;
         case ClockState::RUNNING_TIMER:
             clock.timerLoop();
@@ -133,10 +147,9 @@ void Program::update()
         case ClockState::NOT_SET:
             break;
         case ClockState::SHOW_CLOCK:
+            clock.showTime();
             break;
     }
-
-    clock.updateTexture();
 
     render();
 }
@@ -176,7 +189,8 @@ void Program::eventHandler()
                 {
                     if (clock.state == ClockState::RINGING)
                     {
-                        clock.state = ClockState::NOT_SET;
+                        clock.state = ClockState::SHOW_CLOCK;
+                        buttons.back().draw = true;
                         SDL_Log("Space key pressed, clockstate is back to normal(NOT_SET)");
                     }
                     else
