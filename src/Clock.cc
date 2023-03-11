@@ -83,7 +83,7 @@ void Clock::showTime()
 
     // update clock
     static std::time_t lastTime = 0;
-    
+
     std::time_t currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     struct std::tm* timeinfo = std::localtime(&currentTime);
 
@@ -91,10 +91,10 @@ void Clock::showTime()
     minutes = timeinfo->tm_min;
     seconds = timeinfo->tm_sec;
 
-    if (currentTime != lastTime) 
-	{
+    if (currentTime != lastTime)
+    {
         lastTime = currentTime;
-		updateTexture();
+        updateTexture();
     }
 }
 
@@ -118,7 +118,7 @@ std::string Clock::timeToText()
         ss << minutes;
 
     if (state == ClockState::SHOW_CLOCK)
-   		ss << ":" << seconds;
+        ss << ":" << seconds;
 
     return ss.str();
 }
