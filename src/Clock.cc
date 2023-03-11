@@ -81,7 +81,21 @@ void Clock::showTime()
         bgColor->change(originalBgColor);
     }
 
-    // update clock here
+    // update clock
+    static std::time_t lastTime = 0;
+    
+    std::time_t currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    struct std::tm* timeinfo = std::localtime(&currentTime);
+
+    hours = timeinfo->tm_hour;
+    minutes = timeinfo->tm_min;
+    seconds = timeinfo->tm_sec;
+
+    if (currentTime != lastTime) 
+	{
+        lastTime = currentTime;
+		updateTexture();
+    }
 }
 
 std::string Clock::timeToText()
@@ -103,8 +117,8 @@ std::string Clock::timeToText()
     else
         ss << minutes;
 
-    if (state == ClockState::RINGING)
-        ss << ":" << seconds;
+    if (state == ClockState::SHOW_CLOCK)
+   		ss << ":" << seconds;
 
     return ss.str();
 }
