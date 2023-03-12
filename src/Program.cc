@@ -2,6 +2,7 @@
 #include "Button.hh"
 #include "Clock.hh"
 #include "Renderer.hh"
+#include "Settings.hh"
 #include "Util.hh"
 
 #include <SDL2/SDL_events.h>
@@ -20,9 +21,9 @@
 
 Program::Program(int argc, char** argv)
     : argc(argc), argv(argv),
-      config("../config", '='),
+      config(Settings::ASSETDIR + "config", '='),
       window(""),
-      mainFont(TTF_OpenFont("../assets/font.ttf", 24)),
+      mainFont(TTF_OpenFont((Settings::ASSETDIR + "font.ttf").c_str(), 24)),
       bgColor(Util::readHexColor(config.get("color"), defaultBackgroundColor)),
       clock(mainFont, wsize, &bgColor, config)
 {
@@ -96,7 +97,7 @@ Program::Program(int argc, char** argv)
             button.isPressed = true;
 
             // play clicksound
-            Mix_Music* click = Mix_LoadMUS("../assets/click.mp3");
+            Mix_Music* click = Mix_LoadMUS((Settings::SONGDIR + "click.mp3").c_str());
 
             if (!click)
             {
@@ -118,10 +119,13 @@ Program::Program(int argc, char** argv)
         {
             button.isPressed = true;
             button.draw = false;
+
+            // update state
             clock.state = ClockState::NOT_SET;
         },
         config);
 
+    // set last button off as default
     buttons.back().draw = false;
 
     // main update loop

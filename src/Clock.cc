@@ -147,10 +147,11 @@ void Clock::startTimer()
     if (!sound)
     {
         // load default sound
-        sound = Mix_LoadMUS("../assets/default.mp3");
+        sound = Mix_LoadMUS((Settings::SONGDIR + "default.mp3").c_str());
+
         if (!sound)
         {
-            SDL_Log("NO SOUND!!! %s %s", Mix_GetError(), SDL_GetError());
+            SDL_Log("NO SOUND!!!\n %s %s", Mix_GetError(), SDL_GetError());
             bgColor->red();
         }
         else
