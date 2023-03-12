@@ -10,7 +10,7 @@ mkdir -p "$HOME/.config/yaac"
 cp "$dir/../assets/font.ttf"* "$HOME/.config/yaac/"
 
 # copy the config file to ~/.config/yaac/
-cp "$dir/../config" "$HOME/.config/yaac/"
+cp -n "$dir/../config" "$HOME/.config/yaac/"
 
 # create the songs directory if it doesn't exist
 mkdir -p "$HOME/.config/yaac/songs"
