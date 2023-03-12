@@ -21,9 +21,9 @@
 
 Program::Program(int argc, char** argv)
     : argc(argc), argv(argv),
-      config(Settings::ASSETDIR + "config", '='),
+      config(Settings::CONFIG, '='),
       window(""),
-      mainFont(TTF_OpenFont((Settings::ASSETDIR + "font.ttf").c_str(), 24)),
+      mainFont(TTF_OpenFont((Settings::FONTDIR).c_str(), 24)),
       bgColor(Util::readHexColor(config.get("color"), defaultBackgroundColor)),
       clock(mainFont, wsize, &bgColor, config)
 {

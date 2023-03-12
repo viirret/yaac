@@ -16,8 +16,9 @@ inline std::string ExpandTilde(const std::string& path)
     return std::string(home_dir) + path.substr(1);
 }
 
-const std::string SONGDIR = ExpandTilde("~/.config/yaac/songs/");
-const std::string ASSETDIR = ExpandTilde("~/.config/yaac/");
+const std::string CONFIG = ExpandTilde("~/.config/yaac/config");
+const std::string SONGDIR = "/usr/share/sounds/yaac/";
+const std::string FONTDIR = "/usr/share/fonts/gnu-free/FreeSans.otf";
 
 } // namespace Settings
 
