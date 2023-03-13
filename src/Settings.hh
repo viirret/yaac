@@ -17,7 +17,7 @@ inline std::string ExpandTilde(const std::string& path)
 }
 
 const std::string CONFIG = ExpandTilde("~/.config/yaac/config");
-const std::string ALSASONGDIR = "/usr/share/sounds/alsa/";
+const std::string DEEPINSONGDIR = "/usr/share/sounds/deepin/stereo/";
 const std::string SONGDIR = "/usr/share/sounds/yaac/";
 const std::string FONTDIR = "/usr/share/fonts/gnu-free/FreeSans.otf";
 

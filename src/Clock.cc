@@ -37,6 +37,15 @@ Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& con
         sound = Util::loadMusic(config.get("song"));
     }
 
+	if(!sound)
+	{
+		SDL_Log("Failed to load sound from config!");
+	}
+	else
+	{
+		SDL_Log("Using config sound %s", config.get("song").c_str());
+	}
+
     // load wakeup time from config
     if (config.get("wakeup") != "")
     {
@@ -147,7 +156,7 @@ void Clock::startTimer()
     if (!sound)
     {
         // load default sound
-        sound = Mix_LoadMUS((Settings::ALSASONGDIR + "Rear_Center.wav").c_str());
+        sound = Mix_LoadMUS((Settings::DEEPINSONGDIR + "system-shutdown.wav").c_str());
         if (!sound)
         {
             SDL_Log("NO SOUND!!!\n %s", Mix_GetError());

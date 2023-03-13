@@ -97,7 +97,7 @@ Program::Program(int argc, char** argv)
             button.isPressed = true;
 
             // play clicksound
-            Mix_Music* click = Mix_LoadMUS((Settings::ALSASONGDIR + "Front_Center.wav").c_str());
+            Mix_Music* click = Mix_LoadMUS((Settings::DEEPINSONGDIR + "complete-print.wav").c_str());
 
             if (!click)
             {

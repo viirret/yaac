@@ -1,5 +1,5 @@
 # yaac
-Yet another alarm-clock
+Yet another alarm clock
 
 ## Introduction
 
