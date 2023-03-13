@@ -1,5 +1,14 @@
-song=huomenta.mp3
+# This is example configuration file for yaac
+
+# this is sound loaded from /usr/share/sounds/yaac/
+song=wakeupsong.mp3
+
+# this is wakeuptime the clock shows when starting
 wakeup=10:00
+
+#
+# Colorscheme
+#
 
 # backgroundcolor
 color=#77f2f2

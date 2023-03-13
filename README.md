@@ -1,5 +1,7 @@
-# yaac
-Yet another alarm clock
+<div align="center">
+<h1>yaac</h1>
+<p> Yet another alarm clock </p>
+</div>
 
 ## Introduction
 
@@ -9,7 +11,51 @@ I loved this website, however I thought it could be improved.
 
 This project aims to create kukuklok like experience but with:
 - Custom mp3s
-- Default wakeup time
+- Preconfigured wakeup time
 - Custom colorscheme
 - Less resources and internet being used
+
+## Installing
+
+If you're using Arch Linux, check out [holvi](https://github.com/NeuronActivation/holvi) to get install with pacman
+```
+pacman -S yaac
+```
+
+### Manual installation
+Install dependencies, for Ubuntu/Debian
+```
+sudo apt install libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev fonts-freefont-ttf -deeping-sound-theme build-essential cmake
+```
+
+Clone the repository
+```
+git clone https://github.com/viirret/yaac.git
+```
+Build the executable
+```
+mkdir build && cd build
+cmake ..
+make
+```
+Run the executable
+```
+./yaac
+```
+
+## Configuration
+This program can be configured with custom sound files and other settings.
+
+To add custom sound files create directory for sound files
+```
+mkdir -p /usr/share/sounds/yaac
+```
+Add your file to there
+```
+cp /path/to/wakeupsong.mp3 /usr/share/sounds/yaac
+```
+
+The configuration file is read from **~/.config/yaac/config**. [Example config](config)
+
+
 
