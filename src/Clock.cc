@@ -147,16 +147,15 @@ void Clock::startTimer()
     if (!sound)
     {
         // load default sound
-        sound = Mix_LoadMUS((Settings::SONGDIR + "default.mp3").c_str());
-
+        sound = Mix_LoadMUS((Settings::ALSASONGDIR + "Rear_Center.wav").c_str());
         if (!sound)
         {
-            SDL_Log("NO SOUND!!!\n %s %s", Mix_GetError(), SDL_GetError());
+            SDL_Log("NO SOUND!!!\n %s", Mix_GetError());
             bgColor->red();
         }
         else
         {
-            SDL_Log("CANNOT FIND CONFIG, USING DEFAULT SOUND");
+            SDL_Log("Using default alsa sounds!");
         }
     }
 
