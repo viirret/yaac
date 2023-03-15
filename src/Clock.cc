@@ -11,6 +11,8 @@
 #include <sstream>
 #include <string>
 
+#include <iostream>
+
 #define clockColorDefault Color(122, 122, 122, 255)
 
 Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& config)
@@ -36,7 +38,7 @@ Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& con
         sound = Util::loadMusic(config.get("song"));
     }
 
-	if(!sound)
+	if (!sound)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to load sound from config %s", Mix_GetError());
 	}
@@ -208,8 +210,12 @@ void Clock::timerLoop()
 {
     static auto lastPrintTime = std::chrono::system_clock::now();
 
-    // Check if one second has elapsed since last message
+	static std::time_t lastSystemTime = std::time(nullptr);
+	auto currentSystemTime = std::time(nullptr);
+
     auto now = std::chrono::system_clock::now();
+
+    // Check if one second has elapsed since last message
     auto elapsedSeconds = std::chrono::duration_cast<std::chrono::seconds>(now - lastPrintTime).count();
     if (elapsedSeconds >= 1)
     {
@@ -217,12 +223,24 @@ void Clock::timerLoop()
 
         // update time
         timeLeft -= std::chrono::seconds(1);
-        updateClockValues();
 
         // update timer
         SDL_Surface* surface = TTF_RenderText_Solid(font, createTimeString().c_str(), clockColor.getSDLColor());
         timeLeftTex = SDL_CreateTextureFromSurface(Renderer::get(), surface);
         SDL_FreeSurface(surface);
+    }
+
+
+	// this idea may work so that this is actually the main update of the new time
+	if (std::difftime(currentSystemTime, lastSystemTime) != 0)
+	{
+		lastSystemTime = currentSystemTime;
+		std::tm localtm = *std::localtime(&currentSystemTime);
+		int currentOffset = localtm.tm_gmtoff;
+		int lastOffset = localtm.tm_gmtoff - std::difftime(currentSystemTime, lastSystemTime);
+		timeLeft -= std::chrono::seconds(lastOffset - currentOffset);
+
+        updateClockValues();
     }
 
     // timer has been reached
