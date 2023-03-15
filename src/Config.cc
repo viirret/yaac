@@ -40,7 +40,7 @@ Config::Config(const std::string& fileName, char delimiter)
     }
     catch (const std::exception& e)
     {
-        SDL_Log("Error in configuration file!");
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Configuration file not found");
     }
 }
 

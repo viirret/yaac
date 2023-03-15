@@ -6,7 +6,6 @@
 
 #include <SDL2/SDL_mixer.h>
 
-#include <SDL2/SDL_surface.h>
 #include <chrono>
 #include <ctime>
 #include <sstream>
@@ -39,7 +38,7 @@ Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& con
 
 	if(!sound)
 	{
-		SDL_Log("Failed to load sound from config!");
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to load sound from config %s", Mix_GetError());
 	}
 	else
 	{
@@ -159,12 +158,12 @@ void Clock::startTimer()
         sound = Mix_LoadMUS((Settings::DEEPINSONGDIR + "system-shutdown.wav").c_str());
         if (!sound)
         {
-            SDL_Log("NO SOUND!!!\n %s", Mix_GetError());
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "NO SOUND: %s", Mix_GetError());
             bgColor->red();
         }
         else
         {
-            SDL_Log("Using default alsa sounds!");
+            SDL_Log("Using default deepin sounds!");
         }
     }
 

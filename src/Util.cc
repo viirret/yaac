@@ -31,8 +31,6 @@ Color readHexColor(std::string hex, const Color& defaultColor)
     }
     catch (...)
     {
-        SDL_Log("ERROR READING HEX:%s USING DEFAULT COLOR:%s", hex.c_str(), defaultColor.getInfo().c_str());
-
         return defaultColor;
     }
 }

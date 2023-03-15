@@ -5,7 +5,10 @@
 #include "Settings.hh"
 #include "Util.hh"
 
+#include <SDL2/SDL_error.h>
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keycode.h>
+#include <SDL2/SDL_log.h>
 #include <SDL2/SDL_mixer.h>
 
 #include <ctime>
@@ -83,8 +86,7 @@ Program::Program(int argc, char** argv)
         [this](Button& button)
         {
             button.isPressed = true;
-            bgColor.black();
-            clock.startTimer();
+			startClock();
         },
         config);
 
@@ -96,17 +98,19 @@ Program::Program(int argc, char** argv)
         {
             button.isPressed = true;
 
-            // play clicksound
-            Mix_Music* click = Mix_LoadMUS((Settings::DEEPINSONGDIR + "complete-print.wav").c_str());
+            // create clicksound
+			Mix_Music* click = Mix_LoadMUS((Settings::DEEPINSONGDIR + "complete-print.wav").c_str());
 
-            if (!click)
+            // file not found
+			if (!click)
             {
-                std::cout << "Cannot find clicksound " << Mix_GetError() << std::endl;
+				SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Cannot find clicksound: %s", Mix_GetError());
             }
-
+			
+			// play clicksound
             if (Mix_PlayMusic(click, 0) == -1)
             {
-                std::cout << "Cannot play clicksound " << Mix_GetError() << std::endl;
+				SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Cannot play clicksound: %s", Mix_GetError());
             }
         },
         config);
@@ -125,7 +129,7 @@ Program::Program(int argc, char** argv)
         },
         config);
 
-    // set last button off as default
+	// dont't render the last button by default
     buttons.back().draw = false;
 
     // main update loop
@@ -202,10 +206,29 @@ void Program::eventHandler()
                         SDL_Log("Space key pressed, while clock is not ringing");
                     }
                 }
+				break;
+				case SDLK_RETURN:
+				{
+					if (clock.state == ClockState::NOT_SET)
+					{
+						SDL_Log("Enter pressed in correct context");
+						startClock();
+					}
+					else 
+					{
+						SDL_Log("Pressed Enter while clock is not in NOT_SET mode");
+					}
+				}
                 break;
             }
         }
     }
+}
+
+void Program::startClock()
+{
+	bgColor.black();
+	clock.startTimer();
 }
 
 void Program::render()

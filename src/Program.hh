@@ -47,6 +47,9 @@ private:
     // functions called by update
     void eventHandler();
     void render();
+
+	// start measuring time
+	void startClock();
 };
 
 #endif
