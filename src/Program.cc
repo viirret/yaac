@@ -86,7 +86,7 @@ Program::Program(int argc, char** argv)
         [this](Button& button)
         {
             button.isPressed = true;
-			startClock();
+            startClock();
         },
         config);
 
@@ -99,18 +99,18 @@ Program::Program(int argc, char** argv)
             button.isPressed = true;
 
             // create clicksound
-			Mix_Music* click = Mix_LoadMUS((Settings::DEEPINSONGDIR + "complete-print.wav").c_str());
+            Mix_Music* click = Mix_LoadMUS((Settings::DEEPINSONGDIR + "complete-print.wav").c_str());
 
             // file not found
-			if (!click)
+            if (!click)
             {
-				SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Cannot find clicksound: %s", Mix_GetError());
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Cannot find clicksound: %s", Mix_GetError());
             }
-			
-			// play clicksound
+
+            // play clicksound
             if (Mix_PlayMusic(click, 0) == -1)
             {
-				SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Cannot play clicksound: %s", Mix_GetError());
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Cannot play clicksound: %s", Mix_GetError());
             }
         },
         config);
@@ -129,7 +129,7 @@ Program::Program(int argc, char** argv)
         },
         config);
 
-	// dont't render the last button by default
+    // dont't render the last button by default
     buttons.back().draw = false;
 
     // main update loop
@@ -150,7 +150,7 @@ void Program::update()
             clock.loopSong();
             break;
         case ClockState::RUNNING_TIMER:
-            clock.timerLoop();
+            clock.updateTimer();
             break;
         case ClockState::NOT_SET:
             break;
@@ -206,19 +206,19 @@ void Program::eventHandler()
                         SDL_Log("Space key pressed, while clock is not ringing");
                     }
                 }
-				break;
-				case SDLK_RETURN:
-				{
-					if (clock.state == ClockState::NOT_SET)
-					{
-						SDL_Log("Enter pressed in correct context");
-						startClock();
-					}
-					else 
-					{
-						SDL_Log("Pressed Enter while clock is not in NOT_SET mode");
-					}
-				}
+                break;
+                case SDLK_RETURN:
+                {
+                    if (clock.state == ClockState::NOT_SET)
+                    {
+                        SDL_Log("Enter pressed in correct context");
+                        startClock();
+                    }
+                    else
+                    {
+                        SDL_Log("Pressed Enter while clock is not in NOT_SET mode");
+                    }
+                }
                 break;
             }
         }
@@ -227,8 +227,8 @@ void Program::eventHandler()
 
 void Program::startClock()
 {
-	bgColor.black();
-	clock.startTimer();
+    bgColor.black();
+    clock.startTimer();
 }
 
 void Program::render()

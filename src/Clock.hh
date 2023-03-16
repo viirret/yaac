@@ -37,11 +37,8 @@ public:
     void addMinute();
     void removeMinute();
 
-    // start timer
     void startTimer();
-
-    // update timer
-    void timerLoop();
+    void updateTimer();
 
     // update main texture
     void updateTexture();
@@ -90,6 +87,7 @@ private:
     std::string timeToText();
     std::string createTimeString();
     void updateClockValues();
+    void updateTimerTexture();
 };
 
 #endif

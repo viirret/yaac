@@ -48,8 +48,8 @@ private:
     void eventHandler();
     void render();
 
-	// start measuring time
-	void startClock();
+    // start measuring time
+    void startClock();
 };
 
 #endif

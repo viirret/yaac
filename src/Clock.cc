@@ -11,8 +11,6 @@
 #include <sstream>
 #include <string>
 
-#include <iostream>
-
 #define clockColorDefault Color(122, 122, 122, 255)
 
 Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& config)
@@ -38,14 +36,14 @@ Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& con
         sound = Util::loadMusic(config.get("song"));
     }
 
-	if (!sound)
-	{
-		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to load sound from config %s", Mix_GetError());
-	}
-	else
-	{
-		SDL_Log("Using config sound %s", config.get("song").c_str());
-	}
+    if (!sound)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to load sound from config %s", Mix_GetError());
+    }
+    else
+    {
+        SDL_Log("Using config sound %s", config.get("song").c_str());
+    }
 
     // load wakeup time from config
     if (config.get("wakeup") != "")
@@ -58,6 +56,14 @@ Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& con
 
         std::getline(ss, token);
         minutes = std::stoi(token);
+    }
+    else
+    {
+        std::time_t currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        std::tm* timeinfo = std::localtime(&currentTime);
+
+        hours = timeinfo->tm_hour;
+        minutes = timeinfo->tm_min;
     }
 
     updateTexture();
@@ -95,7 +101,7 @@ void Clock::showTime()
     static std::time_t lastTime = 0;
 
     std::time_t currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    struct std::tm* timeinfo = std::localtime(&currentTime);
+    std::tm* timeinfo = std::localtime(&currentTime);
 
     hours = timeinfo->tm_hour;
     minutes = timeinfo->tm_min;
@@ -160,7 +166,7 @@ void Clock::startTimer()
         sound = Mix_LoadMUS((Settings::DEEPINSONGDIR + "system-shutdown.wav").c_str());
         if (!sound)
         {
-			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "NO SOUND: %s", Mix_GetError());
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "NO SOUND: %s", Mix_GetError());
             bgColor->red();
         }
         else
@@ -196,56 +202,36 @@ void Clock::startTimer()
     // update variables that tell how much time is remaining
     updateClockValues();
 
-    // create surface
-    SDL_Surface* surface = TTF_RenderText_Solid(font, createTimeString().c_str(), clockColor.getSDLColor());
-
-    // update texture that tells how much time is left
-    timeLeftTex = SDL_CreateTextureFromSurface(Renderer::get(), surface);
-
-    // delete surface
-    SDL_FreeSurface(surface);
+    // update texture
+	updateTimerTexture();
 }
 
-void Clock::timerLoop()
+void Clock::updateTimer()
 {
-    static auto lastPrintTime = std::chrono::system_clock::now();
+    static std::time_t lastSystemTime = std::time(nullptr);
+    auto currentSystemTime = std::time(nullptr);
 
-	static std::time_t lastSystemTime = std::time(nullptr);
-	auto currentSystemTime = std::time(nullptr);
-
-    auto now = std::chrono::system_clock::now();
-
-    // Check if one second has elapsed since last message
-    auto elapsedSeconds = std::chrono::duration_cast<std::chrono::seconds>(now - lastPrintTime).count();
-    if (elapsedSeconds >= 1)
+	// second passes
+    if (std::difftime(currentSystemTime, lastSystemTime) != 0)
     {
-        lastPrintTime = now;
-
-        // update time
-        timeLeft -= std::chrono::seconds(1);
-
-        // update timer
-        SDL_Surface* surface = TTF_RenderText_Solid(font, createTimeString().c_str(), clockColor.getSDLColor());
-        timeLeftTex = SDL_CreateTextureFromSurface(Renderer::get(), surface);
-        SDL_FreeSurface(surface);
-    }
-
-
-	// this idea may work so that this is actually the main update of the new time
-	if (std::difftime(currentSystemTime, lastSystemTime) != 0)
-	{
-		lastSystemTime = currentSystemTime;
+        // get offset off new system time
 		std::tm localtm = *std::localtime(&currentSystemTime);
-		int currentOffset = localtm.tm_gmtoff;
-		int lastOffset = localtm.tm_gmtoff - std::difftime(currentSystemTime, lastSystemTime);
-		timeLeft -= std::chrono::seconds(lastOffset - currentOffset);
+        int currentOffset = localtm.tm_gmtoff;
+        int lastOffset = localtm.tm_gmtoff - std::difftime(currentSystemTime, lastSystemTime);
 
+        // remove offset from timeLeft (normally 1 second)
+		timeLeft -= std::chrono::seconds(currentOffset - lastOffset);
+
+        updateTimerTexture();
         updateClockValues();
+
+        lastSystemTime = currentSystemTime;
     }
 
     // timer has been reached
     if (std::chrono::system_clock::now() >= std::chrono::system_clock::now() + timeLeft)
     {
+        // update state
         state = ClockState::RINGING;
 
         // hide the time left texture
@@ -254,6 +240,14 @@ void Clock::timerLoop()
         // make the backgroundColor white
         bgColor->white();
     }
+}
+
+void Clock::updateTimerTexture()
+{
+    // update timer
+    SDL_Surface* surface = TTF_RenderText_Solid(font, createTimeString().c_str(), clockColor.getSDLColor());
+    timeLeftTex = SDL_CreateTextureFromSurface(Renderer::get(), surface);
+    SDL_FreeSurface(surface);
 }
 
 void Clock::updateClockValues()
