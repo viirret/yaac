@@ -4,6 +4,7 @@
 #include "Button.hh"
 #include "Clock.hh"
 #include "Config.hh"
+#include "Opts.hh"
 #include "Window.hh"
 
 #include <SDL2/SDL_ttf.h>
@@ -17,8 +18,7 @@ public:
 
 private:
     // cmd arguments
-    int argc;
-    char** argv;
+    Opts opts;
 
     // Configuration
     Config config;

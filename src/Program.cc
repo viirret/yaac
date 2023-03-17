@@ -5,10 +5,6 @@
 #include "Settings.hh"
 #include "Util.hh"
 
-#include <SDL2/SDL_error.h>
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_keycode.h>
-#include <SDL2/SDL_log.h>
 #include <SDL2/SDL_mixer.h>
 
 #include <ctime>
@@ -19,11 +15,11 @@
 #define wsize window.getSize()
 #define bsize 50
 
-// default configuration (error in configuration file)
+// default configuration (no configuration file)
 #define defaultBackgroundColor Color(255, 255, 255, 255)
 
 Program::Program(int argc, char** argv)
-    : argc(argc), argv(argv),
+    : opts(argc, argv),
       config(Settings::CONFIG, '='),
       window(""),
       mainFont(TTF_OpenFont((Settings::FONTDIR).c_str(), 24)),
@@ -131,6 +127,11 @@ Program::Program(int argc, char** argv)
 
     // dont't render the last button by default
     buttons.back().draw = false;
+
+    if (opts.startImmediately)
+    {
+        startClock();
+    }
 
     // main update loop
     while (!close)

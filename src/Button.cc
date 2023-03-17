@@ -1,5 +1,6 @@
 #include "Button.hh"
 #include "Renderer.hh"
+#include "Settings.hh"
 #include "Util.hh"
 
 // default colors if config file fails
@@ -67,6 +68,20 @@ void Button::render()
             // change the color for one frame
             SDL_SetRenderDrawColor(Renderer::get(), blinkColor.r, blinkColor.g, blinkColor.b, blinkColor.a);
             SDL_RenderFillRect(Renderer::get(), &rect);
+
+            Mix_Music* clickSound = Mix_LoadMUS((Settings::DEEPINSONGDIR + "complete-copy.wav").c_str());
+
+            // file not found
+            if (!clickSound)
+            {
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Cannot find clicksound: %s", Mix_GetError());
+            }
+
+            // play clicksound
+            if (Mix_PlayMusic(clickSound, 0) == -1)
+            {
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Cannot play clicksound: %s", Mix_GetError());
+            }
 
             // go back to normal
             isPressed = false;

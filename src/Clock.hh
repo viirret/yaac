@@ -79,8 +79,8 @@ private:
 
     // main texture:
     // values
-    int hours = 0;
-    int minutes = 0;
+    int hours;
+    int minutes;
     int seconds = 0;
 
     // timer texture:

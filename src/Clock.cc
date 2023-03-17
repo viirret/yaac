@@ -99,16 +99,17 @@ void Clock::showTime()
 
     // update clock
     static std::time_t lastTime = 0;
-
     std::time_t currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    std::tm* timeinfo = std::localtime(&currentTime);
 
-    hours = timeinfo->tm_hour;
-    minutes = timeinfo->tm_min;
-    seconds = timeinfo->tm_sec;
-
+    // time has changed
     if (currentTime != lastTime)
     {
+        std::tm* timeinfo = std::localtime(&currentTime);
+
+        hours = timeinfo->tm_hour;
+        minutes = timeinfo->tm_min;
+        seconds = timeinfo->tm_sec;
+
         lastTime = currentTime;
         updateTexture();
     }
@@ -203,7 +204,7 @@ void Clock::startTimer()
     updateClockValues();
 
     // update texture
-	updateTimerTexture();
+    updateTimerTexture();
 }
 
 void Clock::updateTimer()
@@ -211,19 +212,20 @@ void Clock::updateTimer()
     static std::time_t lastSystemTime = std::time(nullptr);
     auto currentSystemTime = std::time(nullptr);
 
-	// second passes
+    // newtime is different than old time
     if (std::difftime(currentSystemTime, lastSystemTime) != 0)
     {
         // get offset off new system time
-		std::tm localtm = *std::localtime(&currentSystemTime);
+        std::tm localtm = *std::localtime(&currentSystemTime);
         int currentOffset = localtm.tm_gmtoff;
         int lastOffset = localtm.tm_gmtoff - std::difftime(currentSystemTime, lastSystemTime);
 
         // remove offset from timeLeft (normally 1 second)
-		timeLeft -= std::chrono::seconds(currentOffset - lastOffset);
+        timeLeft -= std::chrono::seconds(currentOffset - lastOffset);
 
-        updateTimerTexture();
+        // update variables and texture
         updateClockValues();
+        updateTimerTexture();
 
         lastSystemTime = currentSystemTime;
     }
