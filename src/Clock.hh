@@ -4,6 +4,7 @@
 #include "Button.hh"
 #include "Color.hh"
 #include "Config.hh"
+#include "Opts.hh"
 #include "Vector2.hh"
 
 #include <SDL2/SDL.h>
@@ -23,7 +24,7 @@ enum class ClockState
 class Clock
 {
 public:
-    Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& config);
+    Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& config, const Opts& opts);
     ~Clock();
 
     // current state of this clock
@@ -88,6 +89,9 @@ private:
     std::string createTimeString();
     void updateClockValues();
     void updateTimerTexture();
+
+    // copy of options
+    Opts opts;
 };
 
 #endif

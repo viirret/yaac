@@ -1,5 +1,6 @@
 #include "Clock.hh"
 #include "Color.hh"
+#include "Opts.hh"
 #include "Renderer.hh"
 #include "Settings.hh"
 #include "Util.hh"
@@ -7,16 +8,18 @@
 #include <SDL2/SDL_mixer.h>
 
 #include <chrono>
+#include <cstdlib>
 #include <ctime>
 #include <sstream>
 #include <string>
 
 #define clockColorDefault Color(122, 122, 122, 255)
 
-Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& config)
+Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& config, const Opts& opts)
     : state(ClockState::NOT_SET),
       font(font), bgColor(bgColor), originalBgColor(*bgColor),
-      clockColor(Util::readHexColor(config.get("clockColor"), clockColorDefault))
+      clockColor(Util::readHexColor(config.get("clockColor"), clockColorDefault)),
+      opts(opts)
 {
     // define clock size and position
     rect.w = 200;
@@ -233,6 +236,9 @@ void Clock::updateTimer()
     // timer has been reached
     if (std::chrono::system_clock::now() >= std::chrono::system_clock::now() + timeLeft)
     {
+        if (opts.closeImmediately)
+            exit(0);
+
         // update state
         state = ClockState::RINGING;
 

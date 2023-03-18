@@ -24,7 +24,7 @@ Program::Program(int argc, char** argv)
       window(""),
       mainFont(TTF_OpenFont((Settings::FONTDIR).c_str(), 24)),
       bgColor(Util::readHexColor(config.get("color"), defaultBackgroundColor)),
-      clock(mainFont, wsize, &bgColor, config)
+      clock(mainFont, wsize, &bgColor, config, opts)
 {
     buttons.emplace_back(
         // position and size for the button
