@@ -48,8 +48,16 @@ Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& con
         SDL_Log("Using config sound %s", config.get("song").c_str());
     }
 
+    // wakeuptime has been in command line
+    if (opts.wakeupTime != "")
+    {
+        std::istringstream ss(opts.wakeupTime);
+        char colon;
+        ss >> hours >> colon >> minutes;
+    }
+
     // load wakeup time from config
-    if (config.get("wakeup") != "")
+    else if (config.get("wakeup") != "")
     {
         std::stringstream ss(config.get("wakeup"));
         std::string token;
@@ -60,6 +68,7 @@ Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& con
         std::getline(ss, token);
         minutes = std::stoi(token);
     }
+    // set default time as current time if cmd option is not set
     else
     {
         std::time_t currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());

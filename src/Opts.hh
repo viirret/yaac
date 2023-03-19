@@ -10,6 +10,7 @@ public:
     Opts(int argc, char** argv);
     bool startImmediately = false;
     bool closeImmediately = false;
+    std::string wakeupTime = "";
 
 private:
     std::vector<std::string> arguments;

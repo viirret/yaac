@@ -19,7 +19,7 @@ Opts::Opts(int argc, char** argv)
 
         else if (isArg(arguments[i], "-t", "--time"))
         {
-            SDL_Log("Arg: %s", arguments[i + 1].c_str());
+            wakeupTime = arguments[i + 1];
         }
 
         else if (isArg(arguments[i], "-c", "--close"))
