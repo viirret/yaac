@@ -18,7 +18,7 @@ public:
 
     Button(Button&& button);
 
-    void render();
+    void update();
 
     SDL_Rect rect;
 

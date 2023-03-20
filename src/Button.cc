@@ -53,7 +53,7 @@ Button::Button(Button&& button)
     button.buttonTexture = nullptr;
 }
 
-void Button::render()
+void Button::update()
 {
     if (draw)
     {

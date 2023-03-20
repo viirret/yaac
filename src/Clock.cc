@@ -8,7 +8,6 @@
 #include <SDL2/SDL_mixer.h>
 
 #include <chrono>
-#include <cstdlib>
 #include <ctime>
 #include <sstream>
 #include <string>
@@ -68,7 +67,8 @@ Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& con
         std::getline(ss, token);
         minutes = std::stoi(token);
     }
-    // set default time as current time if cmd option is not set
+
+    // set default time as current time 
     else
     {
         std::time_t currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());

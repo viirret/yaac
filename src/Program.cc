@@ -1,6 +1,4 @@
 #include "Program.hh"
-#include "Button.hh"
-#include "Clock.hh"
 #include "Renderer.hh"
 #include "Settings.hh"
 #include "Util.hh"
@@ -118,7 +116,6 @@ Program::Program(int argc, char** argv)
         [this](Button& button)
         {
             button.isPressed = true;
-            button.draw = false;
 
             // update state
             clock.state = ClockState::NOT_SET;
@@ -242,7 +239,7 @@ void Program::render()
 
     // render buttons
     for (auto& button : buttons)
-        button.render();
+        button.update();
 
     // main SDL rendering
     Renderer::render();
