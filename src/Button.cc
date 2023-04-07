@@ -12,7 +12,8 @@ Button::Button(const SDL_Rect& rect, TTF_Font* font, const std::string& text, co
     : rect(rect), click(click),
       buttonColor(Util::readHexColor(config.get("buttonColor"), buttonColorDefault)),
       textColor(Util::readHexColor(config.get("buttonText"), buttonTextDefault)),
-      blinkColor(Util::readHexColor(config.get("buttonBlink"), buttonBlinkDefault))
+      blinkColor(Util::readHexColor(config.get("buttonBlink"), buttonBlinkDefault)),
+	  playClickSound(config.get("buttonSound") == "true")
 {
     // create button surface
     SDL_Surface* buttonSurface = SDL_CreateRGBSurface(0, rect.w, rect.h, 32, 0, 0, 0, 0);
@@ -42,13 +43,14 @@ Button::~Button()
 
 Button::Button(Button&& button)
     : click(std::move(button.click)), isPressed(button.isPressed),
-      buttonTexture(button.buttonTexture), textTexture(button.textTexture)
+      buttonTexture(button.buttonTexture), textTexture(button.textTexture),
+	  playClickSound(button.playClickSound)
 {
     rect.x = button.rect.x;
     rect.y = button.rect.y;
     rect.w = button.rect.w;
     rect.h = button.rect.h;
-
+	
     button.textTexture = nullptr;
     button.buttonTexture = nullptr;
 }
@@ -69,19 +71,22 @@ void Button::update()
             SDL_SetRenderDrawColor(Renderer::get(), blinkColor.r, blinkColor.g, blinkColor.b, blinkColor.a);
             SDL_RenderFillRect(Renderer::get(), &rect);
 
-            Mix_Music* clickSound = Mix_LoadMUS((Settings::DEEPINSONGDIR + "complete-copy.wav").c_str());
+			if (playClickSound)
+			{
+				Mix_Music* clickSound = Mix_LoadMUS((Settings::DEEPINSONGDIR + "complete-copy.wav").c_str());
 
-            // file not found
-            if (!clickSound)
-            {
-                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Cannot find clicksound: %s", Mix_GetError());
-            }
+				// file not found
+				if (!clickSound)
+				{
+					SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Cannot find clicksound: %s", Mix_GetError());
+				}
 
-            // play clicksound
-            if (Mix_PlayMusic(clickSound, 0) == -1)
-            {
-                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Cannot play clicksound: %s", Mix_GetError());
-            }
+				// play clicksound
+				if (Mix_PlayMusic(clickSound, 0) == -1)
+				{
+					SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Cannot play clicksound: %s", Mix_GetError());
+				}
+			}
 
             // go back to normal
             isPressed = false;

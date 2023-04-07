@@ -27,7 +27,7 @@ Opts::Opts(int argc, char** argv)
             closeImmediately = true;
         }
 
-        else if (isArg(arguments[i], "-h", "--help"))
+		else if (isArg(arguments[i], "-h", "--help"))
         {
             SDL_Log("Print help screen here");
             exit(0);
