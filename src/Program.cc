@@ -109,6 +109,9 @@ Program::Program(int argc, char** argv)
         },
         config);
 
+    // since this button plays sound itself, we set normal button sounds off
+    buttons.back().setClickSound(false);
+
     // the reset button
     buttons.emplace_back(
         SDL_Rect{wsize.x / 2 - bsize * 2, wsize.y / 10, bsize * 4, bsize},
@@ -196,6 +199,8 @@ void Program::eventHandler()
                     if (clock.state == ClockState::RINGING)
                     {
                         clock.state = ClockState::SHOW_CLOCK;
+
+                        // draw the reset button
                         buttons.back().draw = true;
                         SDL_Log("Space key pressed, clockstate is back to normal(NOT_SET)");
                     }

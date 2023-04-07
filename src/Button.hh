@@ -26,6 +26,12 @@ public:
     bool draw = true;
 
     const std::function<void(Button&)> click;
+
+    void setClickSound(bool state)
+    {
+        playClickSound = state;
+    }
+
 private:
     // the actual button
     SDL_Texture* buttonTexture;
@@ -38,7 +44,7 @@ private:
     Color textColor;
     Color blinkColor;
 
-	bool playClickSound;
+    bool playClickSound;
 };
 
 #endif

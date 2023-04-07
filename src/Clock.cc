@@ -68,7 +68,7 @@ Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& con
         minutes = std::stoi(token);
     }
 
-    // set default time as current time 
+    // set default time as current time
     else
     {
         std::time_t currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
