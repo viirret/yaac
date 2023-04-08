@@ -25,7 +25,7 @@ pacman -S yaac
 ### Manual installation
 Install dependencies, for Ubuntu/Debian
 ```
-sudo apt install libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev fonts-freefont-ttf -deeping-sound-theme build-essential cmake
+apt install libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev fonts-freefont-ttf deeping-sound-theme build-essential cmake
 ```
 
 Clone the repository
@@ -48,11 +48,11 @@ This program can be configured with custom sound files and other settings.
 
 To add custom sound files create directory for sound files
 ```
-mkdir -p /usr/share/sounds/yaac
+mkdir -p ~/.local/share/yaac
 ```
 Add your file to there
 ```
-cp /path/to/wakeupsong.mp3 /usr/share/sounds/yaac
+cp /path/to/wakeupsong.mp3 ~./local/share/yaac
 ```
 
 The configuration file is read from **~/.config/yaac/config**. [Example config](config)
