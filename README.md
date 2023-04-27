@@ -17,7 +17,7 @@ This project aims to create kukuklok like experience but with:
 
 ## Installing
 
-If you're using Arch Linux, check out [holvi](https://github.com/NeuronActivation/holvi) to get install with pacman
+If you're using Arch Linux, check out [holvi](https://github.com/NeuronActivation/holvi) to install with pacman
 ```
 pacman -S yaac
 ```
