@@ -73,7 +73,7 @@ Program::Program(int argc, char** argv)
         config);
 
     buttons.emplace_back(
-        // TODO this is not properly centered, I'll do this when I have time for styling
+        // TODO this is not properly centered, not going to change
         SDL_Rect{wsize.x / 2 - bsize * 2, wsize.y / 2 + wsize.y / 6, bsize * 4, bsize},
         mainFont, "Start alarm",
 

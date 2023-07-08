@@ -2,6 +2,9 @@
 
 #include <SDL2/SDL.h>
 
+#include <sstream>
+#include <fstream>
+
 Config::Config(const std::string& fileName, char delimiter)
 {
     try

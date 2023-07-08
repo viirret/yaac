@@ -7,12 +7,14 @@
 class Opts
 {
 public:
+    // Constructor.
     Opts(int argc, char** argv);
     bool startImmediately = false;
     bool closeImmediately = false;
     std::string wakeupTime = "";
 
 private:
+    // Storage for arguments.
     std::vector<std::string> arguments;
 
     // abstraction for std::strcmp

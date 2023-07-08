@@ -8,21 +8,25 @@
 
 struct Color
 {
+    // Default constructor.
     Color()
     {
     }
 
+    // Constructor.
     Color(int r, int g, int b, int a)
         : r(r), g(g), b(b), a(a)
     {
     }
 
+    // Operator overload for stream insertion operator.
     friend std::ostream& operator<<(std::ostream& os, const Color& color)
     {
         os << "r:" << color.r << " g:" << color.g << " b:" << color.b << " a:" << color.a;
         return os;
     }
 
+    // Get information about the color.
     std::string getInfo() const
     {
         std::stringstream ss;
@@ -30,11 +34,13 @@ struct Color
         return ss.str();
     }
 
+    // Cast Color data to SDL_Color.
     SDL_Color getSDLColor() const
     {
         return {static_cast<Uint8>(r), static_cast<Uint8>(g), static_cast<Uint8>(b), static_cast<Uint8>(a)};
     }
 
+    // Premade color functions.
     void black()
     {
         r = 0;

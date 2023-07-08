@@ -7,12 +7,15 @@
 
 namespace Renderer
 {
+
+// Static SDL_Renderer pointer.
 SDL_Renderer* get();
 void set(SDL_Renderer* ren);
 
 void render();
 void clear();
 void setColor(Color color);
+
 } // namespace Renderer
 
 #endif

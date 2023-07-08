@@ -13,6 +13,7 @@
 
 #include <chrono>
 
+// State machine for clock.
 enum class ClockState
 {
     NOT_SET,
@@ -24,7 +25,10 @@ enum class ClockState
 class Clock
 {
 public:
+    // Constructor.
     Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& config, const Opts& opts);
+
+    // Destructor.
     ~Clock();
 
     // current state of this clock

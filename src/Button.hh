@@ -13,13 +13,19 @@
 class Button
 {
 public:
+    // Constructor.
     Button(const SDL_Rect& rect, TTF_Font* font, const std::string& text, const std::function<void(Button&)>& click, Config& config);
+
+    // Destructor.
     ~Button();
 
+    // Copy Constructor.
     Button(Button&& button);
 
+    // Main update method.
     void update();
 
+    // SDL rectange.
     SDL_Rect rect;
 
     bool isPressed = false;

@@ -7,8 +7,12 @@
 
 namespace Util
 {
+
+// Utility functions.
+
 Color readHexColor(std::string hex, const Color& defaultColor);
 Mix_Music* loadMusic(const std::string& path);
+
 } // namespace Util
 
 #endif

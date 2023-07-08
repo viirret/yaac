@@ -173,13 +173,19 @@ void Clock::startTimer()
 {
     state = ClockState::RUNNING_TIMER;
 
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Could not play sound");
+
     if (!sound)
     {
+        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Trying to load sound from deepin");
+
         // load default sound
         sound = Mix_LoadMUS((Settings::DEEPINSONGDIR + "system-shutdown.wav").c_str());
         if (!sound)
         {
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "NO SOUND: %s", Mix_GetError());
+
+            // Turning background into red if cannot play sound.
             bgColor->red();
         }
         else
