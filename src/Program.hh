@@ -51,11 +51,6 @@ private:
     // Start measuring time.
     void startClock();
 
-    // Check if Linux process is running.
-    bool isProcessRunning(const std::string& processName);
-
-    // Check that sound system works.
-    bool playSound(const std::string& path);
 };
 
 #endif

@@ -3,6 +3,7 @@
 #include "Settings.hh"
 #include "Util.hh"
 
+#include <SDL2/SDL_log.h>
 #include <SDL2/SDL_mixer.h>
 
 #include <cstdio>
@@ -21,7 +22,7 @@
 // default configuration (no configuration file)
 #define defaultBackgroundColor Color(255, 255, 255, 255)
 
-Program::Program(int argc, char** argv) : 
+Program::Program(int argc, char** argv) :
     opts(argc, argv),
     config(Settings::CONFIG, '='),
     window(""),
@@ -98,8 +99,7 @@ Program::Program(int argc, char** argv) :
             button.isPressed = true;
 
             // create clicksound
-            // TODO check the sound situation here as well.
-            Mix_Music* click = Mix_LoadMUS((Settings::DEEPINSONGDIR + "complete-print.wav").c_str());
+            Mix_Music* click = Util::loadSound((Settings::DEEPINSONGDIR) + "complete-print.wav");
 
             // file not found
             if (!click)
@@ -242,46 +242,6 @@ void Program::startClock()
 
 
     clock.startTimer();
-}
-
-bool Program::isProcessRunning(const std::string& processName)
-{
-    std::string command = "pidof " + processName;
-    std::string result;
-    std::shared_ptr<FILE> pipe(popen(command.c_str(), "r"), pclose);
-
-    if (!pipe)
-    {
-        throw std::runtime_error("popen() failed");
-    }
-
-    char buffer[128];
-    while (fgets(buffer, sizeof(buffer), pipe.get()) != nullptr)
-    {
-        result += buffer;
-    }
-
-    return !result.empty();
-}
-
-bool Program::playSound(const std::string& path)
-{
-    // Testing isProcessRunning()
-    if(isProcessRunning("pipewire"))
-    {
-        SDL_Log("pipewire is running");
-    }
-
-    if(isProcessRunning("systemd"))
-    {
-        SDL_Log("systemd is running");
-    }
-
-    if(isProcessRunning("pulseaudio"))
-    {
-        SDL_Log("pulseaudio is running");
-    }
-    return true;
 }
 
 void Program::render()

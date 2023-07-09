@@ -10,8 +10,15 @@ namespace Util
 
 // Utility functions.
 
+// Get Color from hex code.
 Color readHexColor(std::string hex, const Color& defaultColor);
-Mix_Music* loadMusic(const std::string& path);
+
+// Load SDL_mixer sound objects.
+Mix_Music* loadSoundFromConfig(const std::string& path);
+Mix_Music* loadSound(const std::string& path);
+
+// Check if Linux process is running.
+bool isProgramRunning(const std::string& processName);
 
 } // namespace Util
 

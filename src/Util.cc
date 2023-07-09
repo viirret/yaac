@@ -1,6 +1,8 @@
 #include "Util.hh"
 #include "Settings.hh"
-#include <SDL2/SDL_mixer.h>
+
+#include <memory>
+
 
 namespace Util
 {
@@ -35,9 +37,78 @@ Color readHexColor(std::string hex, const Color& defaultColor)
     }
 }
 
-Mix_Music* loadMusic(const std::string& path)
+bool isProcessRunning(const std::string& processName)
 {
-    return Mix_LoadMUS((Settings::SONGDIR + path).c_str());
+    std::string command = "pidof " + processName;
+    std::string result;
+    std::shared_ptr<FILE> pipe(popen(command.c_str(), "r"), pclose);
+
+    if (!pipe)
+    {
+        throw std::runtime_error("popen() failed");
+    }
+
+    char buffer[128];
+    while (fgets(buffer, sizeof(buffer), pipe.get()) != nullptr)
+    {
+        result += buffer;
+    }
+
+    return !result.empty();
+}
+
+Mix_Music* loadSoundFromConfig(const std::string& path)
+{
+    return loadSound((Settings::SONGDIR + path).c_str());
+}
+
+Mix_Music* loadSound(const std::string& path)
+{
+    Mix_Music* sound = Mix_LoadMUS(path.c_str());
+
+    if(sound)
+    {
+        return sound;
+    }
+    else
+    {
+        if (isProcessRunning("systemd"))
+        {
+            if (isProcessRunning("pulseaudio"))
+            {
+                int restart = std::system("systemctl --user restart pulseaudio.service");
+
+                if (restart == 0)
+                {
+                    SDL_Log("pulseaudio restarted successfully");
+                }
+                else
+                {
+                    SDL_Log("Something wrong with restarting pulseaudio");
+                }
+
+                sound = Mix_LoadMUS(path.c_str());
+
+            }
+            else if(isProcessRunning("pipewire"))
+            {
+                int restart = std::system("systemctl --user restart pipewire.service");
+
+                if (restart == 0)
+                {
+                    SDL_Log("pipewire restarted successfully");
+                }
+                else
+                {
+                    SDL_Log("Something wrong with restarting pipewire");
+                }
+
+                sound = Mix_LoadMUS(path.c_str());
+            }
+        }
+    }
+    return sound;
+
 }
 
 } // namespace Util

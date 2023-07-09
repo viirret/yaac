@@ -14,11 +14,11 @@
 
 #define clockColorDefault Color(122, 122, 122, 255)
 
-Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& config, const Opts& opts)
-    : state(ClockState::NOT_SET),
-      font(font), bgColor(bgColor), originalBgColor(*bgColor),
-      clockColor(Util::readHexColor(config.get("clockColor"), clockColorDefault)),
-      opts(opts)
+Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& config, const Opts& opts) :
+    state(ClockState::NOT_SET),
+    font(font), bgColor(bgColor), originalBgColor(*bgColor),
+    clockColor(Util::readHexColor(config.get("clockColor"), clockColorDefault)),
+    opts(opts)
 {
     // define clock size and position
     rect.w = 200;
@@ -35,7 +35,7 @@ Clock::Clock(TTF_Font* font, Vec2i screenSize, Color* bgColor, const Config& con
     // load sound from config
     if (config.get("song") != "")
     {
-        sound = Util::loadMusic(config.get("song"));
+        sound = Util::loadSoundFromConfig(config.get("song"));
     }
 
     if (!sound)
@@ -173,14 +173,12 @@ void Clock::startTimer()
 {
     state = ClockState::RUNNING_TIMER;
 
-    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Could not play sound");
-
     if (!sound)
     {
         SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Trying to load sound from deepin");
 
         // load default sound
-        sound = Mix_LoadMUS((Settings::DEEPINSONGDIR + "system-shutdown.wav").c_str());
+        sound = Util::loadSound((Settings::DEEPINSONGDIR + "system-shutdown.wav").c_str());
         if (!sound)
         {
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "NO SOUND: %s", Mix_GetError());
