@@ -17,39 +17,45 @@ public:
     Program(int argc, char** argv);
 
 private:
-    // cmd arguments
+    // Cmd arguments.
     Opts opts;
 
-    // Configuration
+    // Configuration.
     Config config;
 
-    // window object that starts SDL
+    // Window object that starts SDL.
     Window window;
 
-    // font used throughout this program
+    // Font used throughout this program.
     TTF_Font* mainFont;
 
-    // backgroundcolor
+    // Backgroundcolor
     Color bgColor;
 
-    // the clock object that get's input from buttons here
+    // The clock object that get's input from buttons here.
     Clock clock;
 
-    // there are multiple buttons in our alarm clock
+    // There are multiple buttons in our alarm clock.
     std::vector<Button> buttons;
 
-    // is our program running
+    // Is our program running.
     bool close = false;
 
-    // update clock object
+    // Update clock object.
     void update();
 
-    // functions called by update
+    // Functions called by update.
     void eventHandler();
     void render();
 
-    // start measuring time
+    // Start measuring time.
     void startClock();
+
+    // Check if Linux process is running.
+    bool isProcessRunning(const std::string& processName);
+
+    // Check that sound system works.
+    bool playSound(const std::string& path);
 };
 
 #endif
